@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use handoff, please cite it using this metadata."
+title: handoff
+abstract: "A Claude Agent Skill that writes a lean, resumable handoff note so a fresh session can continue work without re-reading the whole conversation."
+type: software
+authors:
+  - family-names: Pacalna
+    given-names: Asnari
+    alias: Kyaa-A
+repository-code: "https://github.com/Kyaa-A/handoff"
+url: "https://github.com/Kyaa-A/handoff"
+license: MIT
+keywords:
+  - claude
+  - claude-code
+  - skill
+  - handoff
+  - session-continuity
+  - context

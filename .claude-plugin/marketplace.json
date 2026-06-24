@@ -1,0 +1,23 @@
+{
+  "name": "handoff",
+  "owner": {
+    "name": "Asnari Pacalna",
+    "email": "asnaripacalna@gmail.com"
+  },
+  "description": "Marketplace for the handoff session-continuity skill.",
+  "plugins": [
+    {
+      "name": "handoff",
+      "source": "./",
+      "description": "Write a lean, resumable handoff note so a fresh session continues your work without re-reading the whole conversation.",
+      "author": {
+        "name": "Asnari Pacalna"
+      },
+      "homepage": "https://github.com/Kyaa-A/handoff",
+      "repository": "https://github.com/Kyaa-A/handoff",
+      "license": "MIT",
+      "keywords": ["handoff", "session", "context", "continuity"],
+      "category": "productivity"
+    }
+  ]
+}

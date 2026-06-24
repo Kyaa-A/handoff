@@ -106,7 +106,7 @@ The resume step should re-check anything in the unverified list before building 
 ## 6. Storage and naming
 
 - One file per handoff: `.handoffs/YYYY-MM-DD-<slug>.md`.
-- The date prefix sorts chronologically, so "newest" is just the last filename.
+- The date prefix sorts chronologically, so "newest" is the last filename; when two notes share a date, the more recently modified one is newest.
 - `<slug>` is a short kebab-case topic (`rls-prove-step`, `checkout-bug`), so a directory listing reads like a table of contents.
 - Default to gitignoring `.handoffs/`: these are working notes, often personal, sometimes containing local paths or half-formed ideas. Commit them only when the user wants a shared, team-visible handoff.
 

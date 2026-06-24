@@ -11,8 +11,8 @@ You are **resuming** work from a handoff note. Follow the `handoff` skill: read
 Target: `$ARGUMENTS`
 
 - If a path is given, load that note.
-- Otherwise, find the newest file in `.handoffs/` (the last one by filename, since
-  names are date-prefixed) and load it.
+- Otherwise, find the newest note in `.handoffs/`: the last by filename, since
+  names are date-prefixed, breaking same-day ties by modification time. Load it.
 - If `.handoffs/` is missing or empty, say so plainly and ask what to work on. Do
   not invent a prior state.
 

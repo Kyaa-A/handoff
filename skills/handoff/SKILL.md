@@ -47,7 +47,7 @@ Leave out anything the repository already records: file structure, what the code
 
 ## Where it goes
 
-Write the note to `.handoffs/YYYY-MM-DD-<slug>.md` in the working repository, where `<slug>` is a short kebab-case topic. The newest file by name is the resume target.
+Write the note to `.handoffs/YYYY-MM-DD-<slug>.md` in the working repository, where `<slug>` is a short kebab-case topic. The newest note is the resume target: sort by the date prefix, and when two notes share a date, the more recently modified one wins.
 
 By default `.handoffs/` is local and private: add it to the project's `.gitignore` unless the user wants to commit notes for a team handoff. Say which you did.
 

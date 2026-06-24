@@ -33,6 +33,9 @@ handoff/
 ├── commands/
 │   ├── save.md           # /handoff:save, write the note now
 │   └── resume.md         # /handoff:resume, load the newest note and continue
+├── examples/
+│   ├── good-handoff.md   # an exemplary note that obeys every rule
+│   └── bad-handoff.md    # the same work written as a transcript, and why it fails
 ├── README.md             # this file
 ├── LICENSE               # MIT
 ├── CODE_OF_CONDUCT.md
@@ -42,6 +45,13 @@ handoff/
 ```
 
 `skills/handoff/SKILL.md` carries the rules and triggers. `skills/handoff/references/patterns.md` holds the template, good-versus-bad example entries, the `.handoffs/` storage layout, and how to chain notes across several sessions, which Claude reads when it needs the detail.
+
+## Examples
+
+`examples/` holds a complete handoff note and its badly-written twin, so the difference between a note you can resume from and one you cannot is concrete:
+
+- [`examples/good-handoff.md`](examples/good-handoff.md) leads with the next step, splits confirmed work from believed-but-unverified, records why each decision was made, and points at `path:line` and commit SHAs instead of pasting code.
+- [`examples/bad-handoff.md`](examples/bad-handoff.md) is the same work as a transcript: relative dates, pasted code, no clear next step, and confirmed mixed with assumed. Its header comment lists exactly what makes it fail a resume.
 
 ## Install
 

@@ -91,6 +91,17 @@ You do not have to invoke it manually. Ask Claude to pause or save and it writes
 
 To run it deliberately with the plugin install, use `/handoff:save` to write a note and `/handoff:resume` to continue from the latest one. Notes land in `.handoffs/` in your project and are gitignored by default; commit them only when you want a shared, team-visible handoff.
 
+## Commands
+
+The plugin install adds two namespaced slash commands:
+
+| Command | What it does | Argument |
+| --- | --- | --- |
+| `/handoff:save [slug]` | Writes a handoff note for the current session to `.handoffs/YYYY-MM-DD-<slug>.md`: the goal, what is done and confirmed, what is in progress, the working state, the decisions and why, the next step, and pointers to the key files and commits. Grounds the confirmed list in real evidence (git status, a test run), gitignores `.handoffs/` by default, and commits nothing else. | Optional topic slug for the filename. Defaults to one derived from the current work. |
+| `/handoff:resume [path]` | Loads the newest note in `.handoffs/`, states the goal, current state, and next step in two or three lines, verifies the files and commits it names still exist, then continues the work from there. | Optional path to a specific note. Defaults to the newest by date, breaking same-day ties by modification time. |
+
+The `handoff` skill itself triggers automatically on phrases like the ones above, so neither command is required, they are the manual buttons for the same save and resume loop.
+
 ## License
 
 MIT. Copyright (c) 2026 Asnari (Kyaa-A). See [LICENSE](LICENSE).

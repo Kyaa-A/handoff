@@ -11,6 +11,7 @@ A handoff note is one Markdown file. Keep the whole thing to a screenful.
 date: 2026-06-24
 topic: rls-policy-auditor
 status: in-progress
+branch: feat/rls-auditor
 ---
 
 # Next step
@@ -28,6 +29,9 @@ them, prove runs queries under real auth contexts to confirm isolation.
 # In progress
 - prove.md: connects to the shadow DB, but the role-switch (SET ROLE) is stubbed.
   Left to do: run the cross-tenant query and assert the row count.
+
+# Working state
+On `feat/rls-auditor`. prove.md has uncommitted edits; everything else is committed.
 
 # Decisions
 - Shadow DB over prod for prove, so a leaky policy can never expose real rows.
@@ -89,7 +93,7 @@ If a snippet is truly load-bearing and not yet committed, commit it first and po
 
 ## 5. Confirmed versus assumed
 
-A resume that trusts an unverified claim wastes the work the handoff was meant to save. Separate the two explicitly.
+A resume that trusts an unverified claim wastes the work the handoff was meant to save. Separate the two explicitly. Verify at write time, not only on resume: a long session is often auto-compacted before you save, so confirm the "done" list against `git status`, `git log`, or a real test run rather than from memory, and put anything you cannot re-confirm under "believed but unverified."
 
 ```markdown
 # Done (confirmed)

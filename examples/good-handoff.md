@@ -3,6 +3,7 @@
 date: 2026-06-24
 topic: stripe-webhook-idempotency
 status: in-progress
+branch: fix/webhook-idempotency
 ---
 
 # Next step
@@ -25,6 +26,10 @@ delivery.
   It does not survive a restart and breaks across multiple instances. Replacing it
   with a unique constraint on `webhook_events.event_id` + an upsert that no-ops on
   conflict. Migration drafted, not yet run.
+
+# Working state
+On `fix/webhook-idempotency`. webhook.ts has uncommitted edits (the Set guard);
+the migration is drafted but unstaged. Commit `7f3a1c2` holds the event-recording.
 
 # Decisions
 - Dedup at the database, not the app. (Why: we run 3 instances behind the LB, so an

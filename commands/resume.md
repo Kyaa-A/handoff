@@ -18,7 +18,9 @@ Target: `$ARGUMENTS`
 
 ## What to do
 
-1. Read the note in full.
+1. Read the note in full. If the read returns only part of the file (some
+   environments truncate reads), re-read it completely, a plain `cat` works,
+   before relying on it.
 2. State the plan in two or three lines: the goal, where things stand, and the
    single next step you are about to take. Do not recite the whole note.
 3. Before relying on any file, function, commit, or flag the note names, verify it

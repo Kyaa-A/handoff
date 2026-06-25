@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: Write a lean, resumable handoff note so a fresh Claude Code session can continue the work without re-reading the whole conversation. Use this skill whenever the user is wrapping up, pausing, running low on usage or context, switching machines, or says "save my progress," "hand off," "continue later," "context is getting long," "pause here," or (to resume) "pick up where I left off." It captures the goal, what is done, what is in progress, the decisions and why, the next step, and pointers to the key files and commits, then writes it to a dated handoff file so the next session starts warm instead of cold.
+description: Write a lean, resumable handoff note so a fresh session (Claude Code or Codex) can continue the work without re-reading the whole conversation. Use this skill whenever the user is wrapping up, pausing, running low on usage or context, switching machines, or says "save my progress," "hand off," "continue later," "context is getting long," "pause here," or (to resume) "pick up where I left off." It captures the goal, what is done, what is in progress, the decisions and why, the next step, and pointers to the key files and commits, then writes it to a dated handoff file so the next session starts warm instead of cold.
 ---
 
 # handoff
@@ -54,7 +54,9 @@ By default `.handoffs/` is local and private: add it to the project's `.gitignor
 
 ## Resuming
 
-On a resume request, find the newest file in `.handoffs/`, read it, and state the plan in two or three lines: the goal, where things stand, and the next step you are about to take. Then continue the work. Do not re-derive everything from scratch; the note is the context.
+On a resume request, find the newest file in `.handoffs/`, read it in full, and state the plan in two or three lines: the goal, where things stand, and the next step you are about to take. Then continue the work. Do not re-derive everything from scratch; the note is the context.
+
+Read the whole note before acting. If the read comes back partial or truncated, some environments shorten file reads, read it again completely (a plain `cat` works) before trusting it. A half-read note will mislead the resume.
 
 If a note names a file, function, commit, or flag, verify it still exists before relying on it. A handoff reflects what was true when it was written, and the repository may have moved since.
 

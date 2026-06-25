@@ -1,6 +1,6 @@
 # handoff
 
-A Claude Agent Skill that ends a work session by writing a lean, resumable note, so a fresh session picks up the work without re-reading the whole conversation. Start cold, resume warm, keep your sessions short and cheap.
+An agent skill, for both Claude Code and Codex CLI, that ends a work session by writing a lean, resumable note, so a fresh session picks up the work without re-reading the whole conversation. Start cold, resume warm, keep your sessions short and cheap.
 
 ## The problem
 
@@ -27,7 +27,7 @@ handoff/
 │   └── marketplace.json  # one-plugin marketplace, so it installs from this repo
 ├── skills/
 │   └── handoff/
-│       ├── SKILL.md      # the rules Claude loads
+│       ├── SKILL.md      # the rules the agent loads (Claude Code or Codex)
 │       └── references/
 │           └── patterns.md  # template, good/bad examples, storage, chaining
 ├── commands/
@@ -79,7 +79,18 @@ cp -r handoff/skills/handoff ~/.claude/skills/handoff
 
 Installed this way the skill triggers automatically, but the `/handoff:save` and `/handoff:resume` commands come only with the plugin install above.
 
-Either way, Claude discovers the skill automatically via the `description` field in `SKILL.md`. No configuration needed.
+### On Codex CLI
+
+Codex uses the same skill format, so the `skills/handoff` folder drops straight into your Codex skills directory:
+
+```bash
+git clone https://github.com/Kyaa-A/handoff.git
+cp -r handoff/skills/handoff ~/.agents/skills/handoff
+```
+
+Codex auto-invokes it when your prompt matches the `description` (same as Claude Code), or you can call it explicitly by typing `$handoff`. Run `/skills` to confirm it loaded. For a project-scoped install, copy it into `.agents/skills/handoff` in the repo instead. (Codex reads skills from `.agents/skills`; older builds used `~/.codex/skills`, see the [skills docs](https://developers.openai.com/codex/skills).)
+
+Either way, the agent, Claude Code or Codex, discovers the skill automatically via the `description` field in `SKILL.md`. No configuration needed.
 
 ## Usage
 
@@ -89,7 +100,7 @@ You do not have to invoke it manually. Ask Claude to pause or save and it writes
 - "I'm running low, hand this off so I can continue in a fresh session."
 - "Pick up where I left off." (resumes from the newest note)
 
-To run it deliberately with the plugin install, use `/handoff:save` to write a note and `/handoff:resume` to continue from the latest one. Notes land in `.handoffs/` in your project and are gitignored by default; commit them only when you want a shared, team-visible handoff.
+To run it deliberately with the plugin install, use `/handoff:save` to write a note and `/handoff:resume` to continue from the latest one. On Codex, the same phrases trigger it automatically, or invoke it explicitly with `$handoff` ("`$handoff` save my progress" / "`$handoff` pick up where I left off"). Notes land in `.handoffs/` in your project and are gitignored by default; commit them only when you want a shared, team-visible handoff.
 
 ## Commands
 

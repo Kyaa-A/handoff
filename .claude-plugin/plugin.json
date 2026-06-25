@@ -10,5 +10,5 @@
   "homepage": "https://github.com/Kyaa-A/handoff",
   "repository": "https://github.com/Kyaa-A/handoff",
   "license": "MIT",
-  "keywords": ["handoff", "session", "context", "memory", "continuity", "claude-code"]
+  "keywords": ["handoff", "session", "context", "memory", "continuity", "claude-code", "codex"]
 }

@@ -3,9 +3,9 @@ description: Write a lean, resumable handoff note for the current session so a f
 argument-hint: [short topic slug for the note, defaults to the current work]
 ---
 
-You are writing a **handoff note** so a fresh Claude Code session can continue
-this work. Follow the `handoff` skill: read `skills/handoff/SKILL.md` for the
-rules and `skills/handoff/references/patterns.md` for the template and examples.
+You are writing a **handoff note** so a fresh session can continue this work.
+Follow the `handoff` skill: read `skills/handoff/SKILL.md` for the rules and
+`skills/handoff/references/patterns.md` for the template and examples.
 
 ## Topic
 

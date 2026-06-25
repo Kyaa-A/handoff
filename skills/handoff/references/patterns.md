@@ -134,3 +134,5 @@ wire the cross-tenant query and assert zero rows. Starting there now.
 ```
 
 Then act. The note is the context; do not rebuild it from the repository unless a pointer has gone stale.
+
+Read the whole note first. Some environments (a memory hook, a token-saving wrapper) silently truncate file reads and hand back only the first line or two. If that happens, re-read the file in full, a plain `cat` bypasses most read wrappers, before trusting it. Resuming from a half-read note wastes the work the handoff was meant to save.

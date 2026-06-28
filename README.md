@@ -15,7 +15,7 @@ The skill writes a handoff note when a session winds down, and reads it back to 
 - **Captures state, not transcript.** Goal, what is done, what is in progress, decisions and why, the next step, and pointers to the key files and commits.
 - **Why over what.** The repository already records what changed. The note records why a path was chosen, which is the expensive thing to rediscover.
 - **Points, does not paste.** References `path:line`, commit SHAs, and URLs instead of copying code, so the note stays correct and tiny.
-- **Confirmed versus assumed.** Separates verified work from believed-but-unproven, so a resume never trusts a stale claim.
+- **Confirmed versus assumed.** Separates verified work from believed-but-unverified, so a resume never trusts a stale claim.
 - **Lean by design.** Targets a screenful. A handoff is an index, not a log.
 
 ## File structure
@@ -108,7 +108,7 @@ The plugin install adds two namespaced slash commands:
 
 | Command | What it does | Argument |
 | --- | --- | --- |
-| `/handoff:save [slug]` | Writes a handoff note for the current session to `.handoffs/YYYY-MM-DD-<slug>.md`: the goal, what is done and confirmed, what is in progress, the working state, the decisions and why, the next step, and pointers to the key files and commits. Grounds the confirmed list in real evidence (git status, a test run), gitignores `.handoffs/` by default, and commits nothing else. | Optional topic slug for the filename. Defaults to one derived from the current work. |
+| `/handoff:save [slug]` | Writes a handoff note for the current session to `.handoffs/YYYY-MM-DD-<slug>.md`: the single next step, the goal, what is done and confirmed, what is in progress, the working state, the decisions and why, the blockers and open questions, and pointers to the key files and commits. Grounds the confirmed list in real evidence (git status, a test run), gitignores `.handoffs/` by default, and commits nothing else. | Optional topic slug for the filename. Defaults to one derived from the current work. |
 | `/handoff:resume [path]` | Loads the newest note in `.handoffs/`, states the goal, current state, and next step in two or three lines, verifies the files and commits it names still exist, then continues the work from there. | Optional path to a specific note. Defaults to the newest by date, breaking same-day ties by modification time. |
 
 The `handoff` skill itself triggers automatically on phrases like the ones above, so neither command is required, they are the manual buttons for the same save and resume loop.

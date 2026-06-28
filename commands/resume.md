@@ -3,8 +3,8 @@ description: Resume work from the latest handoff note. Loads the newest file in 
 argument-hint: [optional path to a specific handoff file, defaults to the newest]
 ---
 
-You are **resuming** work from a handoff note. Follow the `handoff` skill: read
-`skills/handoff/SKILL.md` for the resume rules.
+You are **resuming** work from a handoff note. Follow the `handoff` skill for the
+resume rules — invoke the skill if its rules are not already loaded.
 
 ## Which note
 

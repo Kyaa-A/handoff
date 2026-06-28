@@ -27,7 +27,7 @@ When in doubt near the end of a working session, offer to write one.
 3. **Point, do not paste.** Reference files as `path:line`, name the commit SHA, link the URL or ticket. Do not copy code or large output into the note. Pointers stay correct and cost almost nothing.
 4. **Absolute dates, never relative.** Write `2026-06-24`, not "today" or "yesterday." A note read next week must not lie about when it was written.
 5. **Lead with the next action.** The first line of the body is the single thing the next session should do first. Everything else is support.
-6. **Mark confirmed versus assumed.** Tag what was verified (tests passed, feature checked) separately from what is believed but unproven, so the next session does not trust a stale claim. A long session may have been auto-compacted by the time you write the note, so ground the confirmed list in real evidence (a `git status`, a `git log`, an actual test run) instead of trusting memory.
+6. **Mark confirmed versus assumed.** Tag what was verified (tests passed, feature checked) separately from what is believed but unverified, so the next session does not trust a stale claim. A long session may have been auto-compacted by the time you write the note, so ground the confirmed list in real evidence (a `git status`, a `git log`, an actual test run) instead of trusting memory.
 7. **Self-contained.** A fresh session with zero prior context must be able to act on the note alone. No "as discussed above." There is no above.
 8. **Lean.** Target a screenful. If it grows past that, you are transcribing, not handing off. Cut.
 
@@ -40,8 +40,11 @@ A handoff note has these parts, in this order:
 - **Done**: what is finished and confirmed, with `path:line` or commit pointers.
 - **In progress**: what is half-built, where it stands, and what is left.
 - **Working state**: the current branch, and whether the tree is clean, dirty, or stashed. If the handoff crosses to another machine, commit, stash, or push the work in progress first and point at it: an uncommitted tree does not travel.
+- **Environment** (only if the work needs live, machine-local state the repo cannot rebuild): the running process and its port, env vars or secrets that must be set — name them, never paste values — and the DB or migration position plus any seed command the work assumes.
 - **Decisions**: each key choice and the reason for it. Link related notes.
+- **Constraints** (only if any): limits the user set this session that bound the next step — scope caps, files to avoid, "no refactors," tests to skip. Capture only ones surfaced this session and not already in project or global rules.
 - **Blockers / open questions**: what is stuck, and what input is needed.
+- **Believed but unverified**: claims written but not re-confirmed. The resume must re-check these before relying on them.
 - **Pointers**: the handful of files, commits, commands, or URLs the next session will need.
 
 Leave out anything the repository already records: file structure, what the code does, git history. Capture only what is not derivable from the project itself.

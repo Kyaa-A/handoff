@@ -22,7 +22,7 @@ role for a second tenant and assert zero rows. See `commands/prove.md:40`.
 Build the RLS auditor skill: audit finds missing/leaky policies, fix scaffolds
 them, prove runs queries under real auth contexts to confirm isolation.
 
-# Done
+# Done (confirmed)
 - audit.md rubric written and validated. Commit a1b2c3d.
 - fix.md scaffolds a CREATE POLICY per missing CRUD verb. Commit e4f5g6h.
 
@@ -33,14 +33,24 @@ them, prove runs queries under real auth contexts to confirm isolation.
 # Working state
 On `feat/rls-auditor`. prove.md has uncommitted edits; everything else is committed.
 
+# Environment
+Local Supabase on :54322 (`supabase start`). prove needs the service-role key set;
+migrations applied through the latest in `supabase/migrations/`.
+
 # Decisions
 - Shadow DB over prod for prove, so a leaky policy can never expose real rows.
   (Why: the whole point is to catch leaks before they reach prod.)
 - Per-verb policies, not one blanket policy. (Why: a single USING clause hides
   which operation is actually unguarded.)
 
-# Blockers
+# Constraints
+Generate policies only; do not hand-edit the ones already in the migrations.
+
+# Blockers / open questions
 - None. The SET ROLE approach is confirmed working against local Supabase.
+
+# Believed but unverified
+- None yet; the prove step is still being built, nothing to re-confirm.
 
 # Pointers
 - skills/rls/SKILL.md  (the 6 rules)
@@ -48,7 +58,7 @@ On `feat/rls-auditor`. prove.md has uncommitted edits; everything else is commit
 - supabase/migrations/  (where generated policies land)
 ```
 
-The frontmatter is optional but cheap: it lets a resume step sort and filter without reading the body.
+The frontmatter is optional but cheap: it lets a resume step sort and filter without reading the body. The `Environment` and `Constraints` sections are optional too: include them only when the work depends on live, machine-local state, or when the user set limits this session that bound the next step. Omit them otherwise rather than writing `None`.
 
 ## 2. State, not transcript
 
@@ -135,4 +145,4 @@ wire the cross-tenant query and assert zero rows. Starting there now.
 
 Then act. The note is the context; do not rebuild it from the repository unless a pointer has gone stale.
 
-Read the whole note first. Some environments (a memory hook, a token-saving wrapper) silently truncate file reads and hand back only the first line or two. If that happens, re-read the file in full, a plain `cat` bypasses most read wrappers, before trusting it. Resuming from a half-read note wastes the work the handoff was meant to save.
+Read the whole note before acting, and if a read comes back truncated, re-read it in full before trusting it — see the Resuming rule in `SKILL.md` for why and how.

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "handoff",
   "description": "Write a lean, resumable handoff note so a fresh session continues your work without re-reading the whole conversation.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Asnari Pacalna",
     "url": "https://github.com/Kyaa-A"

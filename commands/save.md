@@ -4,8 +4,8 @@ argument-hint: [short topic slug for the note, defaults to the current work]
 ---
 
 You are writing a **handoff note** so a fresh session can continue this work.
-Follow the `handoff` skill: read `skills/handoff/SKILL.md` for the rules and
-`skills/handoff/references/patterns.md` for the template and examples.
+Follow the `handoff` skill — invoke it if not already loaded; it carries the
+rules plus the note template and examples.
 
 ## Topic
 
@@ -17,10 +17,11 @@ Topic slug: `$ARGUMENTS`
 ## What to do
 
 1. Reconstruct the state of the work from this session: the goal, what is done
-   and confirmed, what is in progress, the decisions made and why, any blockers,
+   and confirmed, what is in progress, the working state (branch, and whether the
+   tree is clean, dirty, or stashed), the decisions made and why, any blockers,
    and the handful of files, commits, or commands the next session needs.
-2. Write it to `.handoffs/YYYY-MM-DD-<slug>.md` using the template in
-   `references/patterns.md`. Use today's actual date, absolute, not relative.
+2. Write it to `.handoffs/YYYY-MM-DD-<slug>.md` using the template the `handoff`
+   skill provides. Use today's actual date, absolute, not relative.
 3. Lead the body with the single next step. Point at `path:line` and commit SHAs
    instead of pasting code. Separate confirmed work from believed-but-unverified.
 4. Keep it to a screenful. A handoff is an index, not a transcript.

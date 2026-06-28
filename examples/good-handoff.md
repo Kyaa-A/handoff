@@ -31,6 +31,11 @@ delivery.
 On `fix/webhook-idempotency`. webhook.ts has uncommitted edits (the Set guard);
 the migration is drafted but unstaged. Commit `7f3a1c2` holds the event-recording.
 
+# Environment
+Dev server on :3000 (`pnpm dev`). Needs STRIPE_SECRET_KEY and DATABASE_URL set
+(see `.env.example`); the local DB is migrated to head, the unique-constraint
+migration is drafted but not yet run.
+
 # Decisions
 - Dedup at the database, not the app. (Why: we run 3 instances behind the LB, so an
   in-process guard cannot see another instance's events. The DB is the only shared

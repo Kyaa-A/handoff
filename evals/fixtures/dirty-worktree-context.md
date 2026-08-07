@@ -1,6 +1,7 @@
 # Session context: invoice rounding
 
-Repository: `/work/acme-billing`
+Repository: the directory emitted as `REPO_PATH` by
+`setup-dirty-worktree.sh`.
 
 - Current branch: `fix/invoice-rounding`
 - `git status --short` returned:

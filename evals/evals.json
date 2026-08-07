@@ -59,7 +59,7 @@
         "Command evidence from the emitted repository shows the checked-out branch is `fix/export-timeout-v2`, conflicting with the handoff's `fix/export-timeout`.",
         "Command evidence shows `git rev-parse --verify abc1234^{commit}` fails and `src/export/run-export.ts` does not exist.",
         "Targeted file inspection finds `src/exports/export-runner.ts` and shows it already passes `signal` to `fetchBatch`, so the response does not propose the obsolete edit.",
-        "The resume plan designates running `pnpm test src/export/run-export.test.ts` as the next verification rather than performing broad repository rediscovery.",
+        "Targeted inspection discovers `src/exports/export-runner.test.ts`, and the resume plan designates `pnpm test src/exports/export-runner.test.ts` as the next verification rather than using the stale test path or broadly rediscovering the repository.",
         "The handoff's historical 8/8 result remains distinct from current evidence; because the test is not run by the setup or prompt, the response does not claim it currently passes."
       ]
     },

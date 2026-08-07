@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_path="$(mktemp -d /tmp/handoff-stale-eval.XXXXXX)"
+repo_path="$(mktemp -d "${TMPDIR:-/tmp}/handoff-stale-eval.XXXXXX")"
 git -C "$repo_path" init -q
 git -C "$repo_path" config user.email eval@example.test
 git -C "$repo_path" config user.name "Handoff Eval"
@@ -13,12 +13,16 @@ export async function runExport() {
   return fetchBatch();
 }
 EOF
+cat > "$repo_path/src/export/run-export.test.ts" <<'EOF'
+test("stops after abort", () => {});
+EOF
 git -C "$repo_path" add .
 git -C "$repo_path" commit -qm "feat: start cancellable export"
 
 git -C "$repo_path" switch -q -c fix/export-timeout-v2
 mkdir -p "$repo_path/src/exports"
 git -C "$repo_path" mv src/export/run-export.ts src/exports/export-runner.ts
+git -C "$repo_path" mv src/export/run-export.test.ts src/exports/export-runner.test.ts
 cat > "$repo_path/src/exports/export-runner.ts" <<'EOF'
 export async function runExport(signal: AbortSignal) {
   return fetchBatch({ signal });

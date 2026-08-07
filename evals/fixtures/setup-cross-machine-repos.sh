@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root_path="$(mktemp -d /tmp/handoff-cross-machine-eval.XXXXXX)"
+root_path="$(mktemp -d "${TMPDIR:-/tmp}/handoff-cross-machine-eval.XXXXXX")"
 remote_path="$root_path/search-api.git"
 source_path="$root_path/source-search-api"
 destination_path="$root_path/destination-search-api"

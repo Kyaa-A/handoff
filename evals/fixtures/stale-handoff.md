@@ -29,13 +29,3 @@ On `fix/export-timeout`; clean tree.
 # Pointers
 - `src/export/run-export.ts:88`
 - commit `abc1234`
-
-## Repository state observed at resume time
-
-- Current branch is `fix/export-timeout-v2`, not the branch named above.
-- The worktree is clean.
-- `src/export/run-export.ts` no longer exists; it was moved to
-  `src/exports/export-runner.ts`.
-- `git rev-parse --verify abc1234^{commit}` fails with `unknown revision`.
-- `src/exports/export-runner.ts:112` already passes `signal` to `fetchBatch`.
-- No tests have been run in the resumed session.

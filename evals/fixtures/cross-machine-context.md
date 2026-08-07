@@ -1,16 +1,17 @@
 # Cross-machine resume context
 
-The handoff was written on `/Users/alex/code/search-api` and is now being resumed
-on `/home/dev/search-api`.
+The handoff was written in a source checkout and is now being resumed in a fresh
+destination clone produced by the attached setup script.
 
 ## Handoff note
 
 - Goal: add cursor pagination to `GET /documents`.
 - Branch: `feat/document-cursors`; the source worktree was dirty when the note
   was written.
-- The portable work was committed as `4fd912b` and pushed to
-  `origin/feat/document-cursors` before switching machines.
-- Do not rely on `/Users/alex/code/search-api/tmp/page-debug.json`; it was an
+- The portable work was committed and pushed to
+  `origin/feat/document-cursors` before switching machines. The setup script
+  prints its exact `FEATURE_SHA`.
+- Do not rely on `tmp/page-debug.json` in the source checkout; it was an
   untracked, machine-local debug artifact and was intentionally not committed.
 - Decision: encode `(created_at, id)` in the cursor because timestamps are not
   unique and `id` provides deterministic ordering.
@@ -22,13 +23,6 @@ on `/home/dev/search-api`.
   ```
 
 - `pnpm test` was not run.
-- Required next action: fetch `origin/feat/document-cursors`, verify commit
-  `4fd912b`, then run `pnpm test src/documents/cursor.test.ts` locally before
-  continuing.
-
-## Destination state
-
-- Current directory: `/home/dev/search-api`
-- Current branch: `main`
-- Worktree: clean
-- The remote branch and commit have not yet been fetched or verified locally.
+- The destination has not yet run the focused test. Before continuing, recover
+  the pushed feature work safely and establish that the intended commit is the
+  one available locally.

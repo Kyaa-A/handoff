@@ -1,4 +1,4 @@
-# Partial feature save context
+# Session context: idempotent dispatch
 
 Repository: `/work/dispatch-api`
 
@@ -14,8 +14,10 @@ Repository: `/work/dispatch-api`
 - `dispatch.service.ts` calls the new repository before creating a dispatch.
 - `idempotency.repository.ts` can insert request IDs, but the conflict path is a
   TODO and currently throws `Error("duplicate request")`.
-- Decision: enforce uniqueness in Postgres rather than with an in-memory lock,
-  because multiple API replicas process requests concurrently.
+- The team chose Postgres uniqueness over an in-memory lock because multiple API
+  replicas process requests concurrently.
+- A log line still says `dispatch request received`; renaming it was discussed,
+  but the user explicitly deferred logging cleanup.
 - Verification actually run:
 
   ```text
@@ -24,8 +26,8 @@ Repository: `/work/dispatch-api`
   ```
 
 - No unit, integration, or end-to-end tests were run after these edits.
-- It is believed, but not verified, that the migration works against the local
-  Postgres instance; the database was not started this session.
-- Required next action: implement the unique-conflict lookup in
-  `src/dispatch/idempotency.repository.ts`, then run the real-Postgres
-  idempotency integration test.
+- The developer expects the migration to work against local Postgres, but the
+  database was not started this session, so that has not been checked.
+- The useful continuation point is the unique-conflict lookup in
+  `src/dispatch/idempotency.repository.ts`. Its real-Postgres idempotency
+  integration test should run afterward.

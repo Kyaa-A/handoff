@@ -28,4 +28,3 @@ git -C "$repo_path" add .
 git -C "$repo_path" commit -qm "refactor: move export runner"
 
 printf 'REPO_PATH=%s\n' "$repo_path"
-

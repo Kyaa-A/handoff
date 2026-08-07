@@ -19,4 +19,3 @@ Tests: 12 passed, 12 total
 No full suite, typecheck, or lint command was run. The unfinished work is the
 UTF-8 BOM option at `src/audit/export.ts:64`; after adding it, the focused export
 test needs to be rerun.
-

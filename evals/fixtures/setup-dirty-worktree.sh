@@ -20,4 +20,3 @@ printf '%s\n' 'test("rounds after sum", () => {});' > "$repo_path/src/invoices/c
 scratch_hash="$(sha256sum "$repo_path/notes/customer-cases.txt" | awk '{print $1}')"
 printf 'REPO_PATH=%s\nSCRATCH_PATH=%s\nSCRATCH_SHA256_BEFORE=%s\n' \
   "$repo_path" "$repo_path/notes/customer-cases.txt" "$scratch_hash"
-

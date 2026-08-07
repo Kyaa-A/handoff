@@ -1,0 +1,78 @@
+{
+  "skill_name": "handoff",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Save a handoff for this clean repository state. We are on branch `feat/audit-export`; `git status --short` returned no output. Commit `9b7c1d2` adds CSV escaping. `pnpm test src/audit/export.test.ts` was run and reported `Tests: 12 passed, 12 total`; no other tests were run. We chose streaming rows instead of buffering because production exports can exceed 500 MB. The next session must first add the missing UTF-8 BOM option in `src/audit/export.ts:64`, then rerun that exact focused test. Write the handoff note content and concise save confirmation.",
+      "expected_output": "A lean save note that leads with the BOM next action, records the clean branch state and decision rationale, and limits confirmed verification to the exact 12/12 focused test evidence.",
+      "files": [],
+      "expectations": [
+        "The note's first body action is to add the UTF-8 BOM option at `src/audit/export.ts:64` and rerun `pnpm test src/audit/export.test.ts`.",
+        "The working state explicitly says branch `feat/audit-export` is clean and points to commit `9b7c1d2`.",
+        "The decision records both streaming instead of buffering and the reason that exports can exceed 500 MB.",
+        "Confirmed verification quotes the exact command `pnpm test src/audit/export.test.ts` and result `12 passed, 12 total`.",
+        "The output does not claim that any full suite, typecheck, lint, or other unrun check passed."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use the attached repository context to save progress before I stop. Produce the handoff note and concise save confirmation. Preserve anything I owned before this session.",
+      "expected_output": "A dirty-worktree handoff that distinguishes session edits from the user's pre-existing scratchpad, preserves that file, records exact focused-test evidence, and names the negative-discount regression case as next.",
+      "files": [
+        "evals/fixtures/dirty-worktree-context.md"
+      ],
+      "expectations": [
+        "The required next action is to add the negative-discount regression case and then rerun `pnpm test src/invoices/calculate-total.test.ts`.",
+        "The working state names branch `fix/invoice-rounding` and accurately lists both modified invoice files and the untracked `notes/customer-cases.txt`.",
+        "The note identifies `notes/customer-cases.txt` as user-owned pre-existing work and explicitly says not to open, stage, modify, or delete it.",
+        "The decision states that tax is rounded after summing because invoice INV-1842 differs by one cent under per-line rounding.",
+        "Confirmed verification includes the exact focused command and `6 passed, 6 total`, while the full `pnpm test` suite is not described as passing."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Create a handoff for the partially implemented feature described in the attached context. Be precise about what is complete, incomplete, and merely believed. Return the note and concise save confirmation.",
+      "expected_output": "A save note that exposes the unfinished conflict path, separates the verified typecheck from the unverified migration, accurately records dirty state, and gives the repository implementation plus real-Postgres test as the next action.",
+      "files": [
+        "evals/fixtures/partial-feature-context.md"
+      ],
+      "expectations": [
+        "The next action is to implement the unique-conflict lookup in `src/dispatch/idempotency.repository.ts` and then run the real-Postgres idempotency integration test.",
+        "The note identifies commit `71c4e2a` as completed but describes the repository conflict path and its current `duplicate request` throw as incomplete.",
+        "The working state names branch `feat/idempotent-dispatch`, modified `src/dispatch/dispatch.service.ts`, and untracked `src/dispatch/idempotency.repository.ts`.",
+        "The Postgres uniqueness choice includes its rationale: multiple API replicas process requests concurrently.",
+        "Only `pnpm typecheck` with `Done in 4.2s` is confirmed; migration behavior is under believed-but-unverified, and no unit, integration, or end-to-end test is described as passing."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Resume from the attached handoff. State the short resume plan and the targeted checks or action you would take now. Do not broadly rediscover the repository and do not silently trust stale pointers.",
+      "expected_output": "A targeted resume response that detects the stale branch, missing commit, and moved file; validates the replacement location before acting; and does not repeat the obsolete edit or claim tests passed in the resumed session.",
+      "files": [
+        "evals/fixtures/stale-handoff.md"
+      ],
+      "expectations": [
+        "The response flags that the current branch `fix/export-timeout-v2` conflicts with the handoff's `fix/export-timeout` branch.",
+        "The response reports that commit `abc1234` cannot be verified and that `src/export/run-export.ts:88` is stale because the file moved.",
+        "The response validates `src/exports/export-runner.ts:112` and recognizes that it already passes `signal` to `fetchBatch`, rather than proposing the obsolete edit.",
+        "The next action is a targeted verification of the current implementation, including running `pnpm test src/export/run-export.test.ts`, not a broad repository rediscovery.",
+        "The historical 8/8 result is kept distinct from current-session evidence; the response does not claim the test currently passes before running it."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I switched machines. Resume the work from the attached context and tell me what you will do first. Respect portable versus machine-local state and do not assume the remote work already exists locally.",
+      "expected_output": "A cross-machine resume plan that fetches and verifies the portable commit before checkout or further work, ignores the source-machine debug artifact, retains the cursor rationale, and reruns the focused test locally without inflating prior evidence.",
+      "files": [
+        "evals/fixtures/cross-machine-context.md"
+      ],
+      "expectations": [
+        "The first action is to fetch `origin/feat/document-cursors` and verify commit `4fd912b` before relying on or continuing the feature work.",
+        "The response distinguishes destination state (`main`, clean, commit not yet verified) from the source machine's dirty worktree.",
+        "The response does not try to access or reconstruct `/Users/alex/code/search-api/tmp/page-debug.json` and identifies it as intentionally non-portable.",
+        "The cursor decision retains the rationale that `(created_at, id)` makes ordering deterministic when timestamps are not unique.",
+        "The source-machine `9 passed, 9 total` result is historical evidence; the response requires rerunning `pnpm test src/documents/cursor.test.ts` locally and does not claim the full suite passed."
+      ]
+    }
+  ]
+}

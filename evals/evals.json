@@ -3,16 +3,17 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "I'm stopping for the day. Use the attached session context to save progress so another agent can continue tomorrow. Write the handoff and return the normal concise confirmation.",
+      "prompt": "I'm stopping for the day. Run the attached setup script, change into its emitted `REPO_PATH`, and use the attached session context to save progress so another agent can continue tomorrow. Write the handoff and return the normal concise confirmation.",
       "expected_output": "A lean save note that selects the unfinished BOM work as the next action, captures clean Git state and the streaming rationale, excludes unrelated UI work, and reports only verification that actually ran.",
       "files": [
+        "evals/fixtures/setup-clean-save.sh",
         "evals/fixtures/clean-save-context.md"
       ],
       "expectations": [
         "The note has a clearly designated next action to add the UTF-8 BOM option at `src/audit/export.ts:64` and rerun `pnpm test src/audit/export.test.ts`.",
-        "The working state explicitly says branch `feat/audit-export` is clean and points to commit `9b7c1d2`.",
+        "The working state explicitly says branch `feat/audit-export` is clean and points to the exact `HEAD_SHA` emitted by setup; the note does not require or invent a magic commit SHA.",
         "The decision records both streaming instead of buffering and the reason that exports can exceed 500 MB.",
-        "Confirmed verification quotes the exact command `pnpm test src/audit/export.test.ts` and result `12 passed, 12 total`.",
+        "Historical/supplied verification preserves the exact command `pnpm test src/audit/export.test.ts` and concise result `12 passed, 12 total`, and does not present it as freshly rerun by the handoff writer.",
         "The unrelated admin empty-state copy is not promoted into the goal or next action, and no full suite, typecheck, lint, or other unrun check is described as passing."
       ]
     },

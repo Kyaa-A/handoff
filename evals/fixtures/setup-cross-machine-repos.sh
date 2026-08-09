@@ -23,7 +23,39 @@ cat > "$source_path/src/documents/list.ts" <<'EOF'
 export const cursorFields = ["created_at", "id"];
 export const listDocuments = () => cursorFields;
 EOF
-git -C "$source_path" add src/documents/list.ts
+cat > "$source_path/src/documents/cursor.test.ts" <<'EOF'
+import assert from "node:assert/strict";
+import test from "node:test";
+import { cursorFields, listDocuments } from "./list.ts";
+
+for (const name of [
+  "uses created_at first",
+  "uses id as the tie-breaker",
+  "keeps two cursor fields",
+  "returns the cursor fields",
+  "keeps deterministic ordering",
+  "does not use offset",
+  "does not duplicate created_at",
+  "does not duplicate id",
+  "keeps the tuple stable",
+]) {
+  test(name, () => {
+    assert.deepEqual(cursorFields, ["created_at", "id"]);
+    assert.deepEqual(listDocuments(), cursorFields);
+  });
+}
+EOF
+cat > "$source_path/package.json" <<'EOF'
+{
+  "name": "handoff-cross-machine-eval",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
+EOF
+git -C "$source_path" add package.json src/documents
 git -C "$source_path" commit -qm "feat: add document cursors"
 feature_sha="$(git -C "$source_path" rev-parse HEAD)"
 git -C "$source_path" push -q -u origin feat/document-cursors

@@ -66,18 +66,19 @@
     },
     {
       "id": 5,
-      "prompt": "Run the attached setup script, change into its emitted `DESTINATION_PATH`, and resume from the attached cross-machine context. Show the Git commands and observations used to recover and verify the portable work before making any edits. Stop once you have stated the next implementation/test action.",
-      "expected_output": "An offline cross-machine resume that observes the destination state, fetches the feature branch from the local bare remote, verifies the emitted feature commit before any edit, avoids source-only artifacts, and treats prior test output as historical.",
+      "prompt": "Run the attached setup script, change into its emitted `DESTINATION_PATH`, and resume from the attached cross-machine context. Show the Git commands and observations used to recover and verify the portable work before making any edits. After checking out the verified commit, run the exact focused command `pnpm test src/documents/cursor.test.ts`, distinguish its current result from the source-machine result, and stop before implementation edits.",
+      "expected_output": "An offline cross-machine resume that observes the destination state, fetches the feature branch from the local bare remote, verifies the emitted feature commit before checkout or edits, avoids source-only artifacts, preserves the cursor rationale, and runs the exact focused test as current destination evidence.",
       "files": [
         "evals/fixtures/setup-cross-machine-repos.sh",
         "evals/fixtures/cross-machine-context.md"
       ],
       "expectations": [
-        "Before fetching, command evidence shows the destination is on clean `main` and the emitted `FEATURE_SHA` is not available in the destination object database.",
-        "The recorded operation order shows `git fetch origin feat/document-cursors` occurs before successful `git cat-file -e <FEATURE_SHA>^{commit}` or equivalent commit verification, and both occur before any checkout or edit.",
-        "After fetch, command evidence ties the fetched commit (`FETCH_HEAD` or an explicitly created remote-tracking ref) to the emitted `FEATURE_SHA`; the response does not merely repeat the context's claim that it was pushed.",
-        "The response does not access or reconstruct the source checkout's `tmp/page-debug.json`, and preserves the rationale that `(created_at, id)` gives deterministic ordering when timestamps are not unique.",
-        "The source-machine `9 passed, 9 total` result is labeled historical; `pnpm test src/documents/cursor.test.ts` is designated for a local rerun, and no full-suite or destination test pass is claimed."
+        "[critical] Before fetching, command evidence shows the destination is on clean `main` and the emitted `FEATURE_SHA` is absent from the destination object database.",
+        "[critical] The recorded operation order is targeted `git fetch origin feat/document-cursors`, then exact verification that the fetched commit equals `FEATURE_SHA`, then checkout; no checkout or edit occurs before verification.",
+        "[supporting] The response preserves the rationale that `(created_at, id)` gives deterministic ordering because timestamps are not unique.",
+        "[critical] The response does not access or reconstruct the source checkout's `tmp/page-debug.json` and identifies it as excluded machine-local state rather than portable work.",
+        "[supporting] The source-machine `9 passed, 9 total` result is explicitly labeled historical and is not presented as destination evidence.",
+        "[critical] After checkout of the verified commit, command evidence runs exact `pnpm test src/documents/cursor.test.ts` successfully in the destination and reports its current result separately; no full-suite pass or implementation edit is claimed."
       ]
     }
   ]

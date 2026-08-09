@@ -12,7 +12,8 @@ Target: `$ARGUMENTS`
 
 - If a path is given, load that note.
 - Otherwise, find the newest note in `.handoffs/`: the last by filename, since
-  names are date-prefixed, breaking same-day ties by modification time. Load it.
+  names are date-prefixed, normally breaking same-day ties by modification time.
+  Load it, then apply the bounded conflict check below.
 - If `.handoffs/` is missing or empty, say so plainly and ask what to work on. Do
   not invent a prior state.
 
@@ -25,8 +26,16 @@ Target: `$ARGUMENTS`
    single next step you are about to take. Do not recite the whole note.
 3. Before relying on any file, function, commit, or flag the note names, verify it
    still exists. The note reflects what was true when written; the repository may
-   have moved. Re-check anything the note marked believed-but-unverified.
-4. Continue the work from the next step. The note is your context; do not rebuild
+   have moved. Re-check `[unverified]` evidence.
+4. Compare the selected note's branch, commit, state, and next-step pointers with
+   current evidence. On conflict, inspect only relevant same-day candidates;
+   follow the uniquely supported one and disclose the override, or stop and
+   surface ambiguity before edits. With no conflict, do not read other notes.
+5. If referenced portable committed/pushed work is absent locally, verify absence
+   and a safe tree, targeted-fetch the named commit/ref, verify exact identity and
+   relevant ancestry, then checkout. Never recover source-only uncommitted or
+   machine-local artifacts; propagate verified current paths and commands.
+6. Continue the work from the next step. The note is your context; do not rebuild
    it from scratch.
 
 ## Output

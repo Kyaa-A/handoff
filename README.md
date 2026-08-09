@@ -50,7 +50,7 @@ handoff/
 
 `examples/` holds a complete handoff note and its badly-written twin, so the difference between a note you can resume from and one you cannot is concrete:
 
-- [`examples/good-handoff.md`](examples/good-handoff.md) leads with the next step, splits confirmed work from believed-but-unverified, records why each decision was made, and points at `path:line` and commit SHAs instead of pasting code.
+- [`examples/good-handoff.md`](examples/good-handoff.md) leads with the next step, labels fresh, historical, and unverified evidence, records why each decision was made, and points at `path:line` and commit SHAs instead of pasting code.
 - [`examples/bad-handoff.md`](examples/bad-handoff.md) is the same work as a transcript: relative dates, pasted code, no clear next step, and confirmed mixed with assumed. Its header comment lists exactly what makes it fail a resume.
 
 ## Install
@@ -109,7 +109,7 @@ The plugin install adds two namespaced slash commands:
 | Command | What it does | Argument |
 | --- | --- | --- |
 | `/handoff:save [slug]` | Writes a handoff note for the current session to `.handoffs/YYYY-MM-DD-<slug>.md`: the single next step, the goal, what is done and confirmed, what is in progress, the working state, the decisions and why, the blockers and open questions, and pointers to the key files and commits. Grounds the confirmed list in real evidence (git status, a test run), gitignores `.handoffs/` by default, and commits nothing else. | Optional topic slug for the filename. Defaults to one derived from the current work. |
-| `/handoff:resume [path]` | Loads the newest note in `.handoffs/`, states the goal, current state, and next step in two or three lines, verifies the files and commits it names still exist, then continues the work from there. | Optional path to a specific note. Defaults to the newest by date, breaking same-day ties by modification time. |
+| `/handoff:resume [path]` | Loads the newest note in `.handoffs/`, checks its branch, commit, state, and pointers against current evidence, safely recovers referenced portable work when needed, then continues. Conflicting same-day notes are compared narrowly and ambiguity stops edits. | Optional path to a specific note. Defaults to the newest by date, normally breaking same-day ties by modification time. |
 
 The `handoff` skill itself triggers automatically on phrases like the ones above, so neither command is required, they are the manual buttons for the same save and resume loop.
 

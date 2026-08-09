@@ -22,7 +22,7 @@ role for a second tenant and assert zero rows. See `commands/prove.md:40`.
 Build the RLS auditor skill: audit finds missing/leaky policies, fix scaffolds
 them, prove runs queries under real auth contexts to confirm isolation.
 
-# Done (confirmed)
+# Done
 - audit.md rubric written and validated. Commit a1b2c3d.
 - fix.md scaffolds a CREATE POLICY per missing CRUD verb. Commit e4f5g6h.
 
@@ -49,8 +49,10 @@ Generate policies only; do not hand-edit the ones already in the migrations.
 # Blockers / open questions
 - None. The SET ROLE approach is confirmed working against local Supabase.
 
-# Believed but unverified
-- None yet; the prove step is still being built, nothing to re-confirm.
+# Evidence
+- [fresh] `git status --short --branch` — on `feat/rls-auditor`; `prove.md` modified.
+- [historical] `pnpm test src/rls/audit.test.ts` — `12 passed, 12 total` (supplied; not rerun while saving).
+- [unverified] The role switch works with the current seed; re-check before relying on it.
 
 # Pointers
 - skills/rls/SKILL.md  (the 6 rules)
@@ -101,26 +103,23 @@ Pasted code rots and bloats. Pointers stay cheap and current.
 
 If a snippet is truly load-bearing and not yet committed, commit it first and point at the SHA, rather than pasting it into the note.
 
-## 5. Confirmed versus assumed
+## 5. Evidence provenance
 
-A resume that trusts an unverified claim wastes the work the handoff was meant to save. Separate the two explicitly. Verify at write time, not only on resume: a long session is often auto-compacted before you save, so confirm the "done" list against `git status`, `git log`, or a real test run rather than from memory, and put anything you cannot re-confirm under "believed but unverified."
+A resume that trusts an unverified claim wastes the work the handoff was meant to save. Use one lean `Evidence` section and label each entry by origin. Omit labels that have no entries.
 
 ```markdown
-# Done (confirmed)
-- Login flow works end to end. Verified manually at localhost:3000/login.
-- Unit tests pass: `pnpm test` green, 84/84.
-
-# Believed but unverified
-- The rate limiter should cover the /vote route, but I never hit it under load.
-  Verify before claiming it is done.
+# Evidence
+- [fresh] Manual login check at `http://localhost:3000/login` — succeeded.
+- [historical] `pnpm test` — `84 passed, 84 total` (supplied; not rerun while saving).
+- [unverified] The rate limiter covers `/vote`; verify under load before relying on it.
 ```
 
-The resume step should re-check anything in the unverified list before building on it.
+`[fresh]` means the writer ran the check now. `[historical]` means the session supplied the command/result but the writer did not rerun it. `[unverified]` means belief only. The resume step re-checks unverified entries before building on them.
 
 ## 6. Storage and naming
 
 - One file per handoff: `.handoffs/YYYY-MM-DD-<slug>.md`.
-- The date prefix sorts chronologically, so "newest" is the last filename; when two notes share a date, the more recently modified one is newest.
+- The date prefix sorts chronologically; same-day modification time is the normal tie-breaker. If the selected note conflicts with current branch, commit, state, or pointers, use the bounded conflict rule in `SKILL.md`.
 - `<slug>` is a short kebab-case topic (`rls-prove-step`, `checkout-bug`), so a directory listing reads like a table of contents.
 - Default to gitignoring `.handoffs/`: these are working notes, often personal, sometimes containing local paths or half-formed ideas. Commit them only when the user wants a shared, team-visible handoff.
 

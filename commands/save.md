@@ -23,7 +23,9 @@ Topic slug: `$ARGUMENTS`
 2. Write it to `.handoffs/YYYY-MM-DD-<slug>.md` using the template the `handoff`
    skill provides. Use today's actual date, absolute, not relative.
 3. Lead the body with the single next step. Point at `path:line` and commit SHAs
-   instead of pasting code. Separate confirmed work from believed-but-unverified.
+   instead of pasting code. Under `Evidence`, label each included entry `[fresh]`
+   (rerun now), `[historical]` (supplied, not rerun), or `[unverified]` (belief).
+   Preserve exact concise commands/results and omit unused labels.
 4. Keep it to a screenful. A handoff is an index, not a transcript.
 5. Add `.handoffs/` to the project `.gitignore` unless the user has asked to
    commit handoffs for a team. State which you did.

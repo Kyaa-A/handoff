@@ -16,7 +16,7 @@ Make the Stripe webhook handler idempotent so retried events never double-credit
 wallet. Stripe redelivers on any non-2xx, and our handler currently processes each
 delivery.
 
-# Done (confirmed)
+# Done
 - Reproduced the double-credit: replaying one `payment_intent.succeeded` credited the
   wallet twice. Captured in the failing test `webhook.spec.ts:120` (red).
 - Handler now records every event id before crediting. Commit `7f3a1c2`.
@@ -48,9 +48,13 @@ migration is drafted but not yet run.
 - None blocking. Open question: backfill the `webhook_events` table from Stripe's
   event log, or start fresh from the deploy? Leaning fresh; we have no live leak.
 
-# Believed but unverified
-- The unique-constraint upsert should make the green path of `webhook.spec.ts:120`
-  pass. Written but not run against the constraint yet. Verify before claiming done.
+# Evidence
+- [fresh] `git status --short --branch` — on `fix/webhook-idempotency`; webhook
+  and migration edits are present.
+- [historical] `pnpm test src/payments/webhook.spec.ts` — `1 failed, 11 passed`
+  (supplied from the reproduction; not rerun while saving).
+- [unverified] The unique-constraint upsert should make `webhook.spec.ts:120`
+  pass; it has not been run against the constraint.
 
 # Pointers
 - src/payments/webhook.ts:48  (the in-memory guard to delete)

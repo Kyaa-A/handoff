@@ -27,7 +27,7 @@ When in doubt near the end of a working session, offer to write one.
 3. **Point, do not paste.** Reference files as `path:line`, name the commit SHA, link the URL or ticket. Do not copy code or large output into the note. Pointers stay correct and cost almost nothing.
 4. **Absolute dates, never relative.** Write `2026-06-24`, not "today" or "yesterday." A note read next week must not lie about when it was written.
 5. **Lead with the next action.** The first line of the body is the single thing the next session should do first. Everything else is support.
-6. **Mark confirmed versus assumed.** Tag what was verified (tests passed, feature checked) separately from what is believed but unverified, so the next session does not trust a stale claim. A long session may have been auto-compacted by the time you write the note, so ground the confirmed list in real evidence (a `git status`, a `git log`, an actual test run) instead of trusting memory. Distinguish provenance: evidence supplied by the session context but not rerun while writing the handoff is **supplied/historical**, not fresh verification. Only a command the handoff writer actually reruns is fresh. Preserve the exact command and any exact concise outcome, status, or counts provided (`12 passed, 12 total`, not `12/12`); do not invent or normalize either. Do not paste arbitrary verbose output when the concise result preserves the evidence.
+6. **Mark evidence provenance.** Use three canonical per-entry labels under `Evidence`: `[fresh]` for a command or check the handoff writer actually ran, `[historical]` for supplied evidence not rerun while writing, and `[unverified]` for a belief with no confirming evidence. A long session may have been auto-compacted, so ground fresh claims in real checks rather than memory. Preserve the exact command and any exact concise outcome, status, or counts supplied (`12 passed, 12 total`, not `12/12`); never upgrade historical or unverified evidence to fresh. Omit unused labels and verbose output.
 7. **Self-contained.** A fresh session with zero prior context must be able to act on the note alone. No "as discussed above." There is no above.
 8. **Lean.** Target a screenful. If it grows past that, you are transcribing, not handing off. Cut.
 
@@ -44,14 +44,14 @@ A handoff note has these parts, in this order:
 - **Decisions**: each key choice and the reason for it. Link related notes.
 - **Constraints** (only if any): limits the user set this session that bound the next step — scope caps, files to avoid, "no refactors," tests to skip. Capture only ones surfaced this session and not already in project or global rules.
 - **Blockers / open questions**: what is stuck, and what input is needed.
-- **Believed but unverified**: claims written but not re-confirmed. The resume must re-check these before relying on them.
+- **Evidence**: lean, per-entry `[fresh]`, `[historical]`, or `[unverified]` claims. The resume must re-check unverified claims before relying on them.
 - **Pointers**: the handful of files, commits, commands, or URLs the next session will need.
 
 Leave out anything the repository already records: file structure, what the code does, git history. Capture only what is not derivable from the project itself.
 
 ## Where it goes
 
-Write the note to `.handoffs/YYYY-MM-DD-<slug>.md` in the working repository, where `<slug>` is a short kebab-case topic. The newest note is the resume target: sort by the date prefix, and when two notes share a date, the more recently modified one wins.
+Write the note to `.handoffs/YYYY-MM-DD-<slug>.md` in the working repository, where `<slug>` is a short kebab-case topic. Normally the newest date wins; for same-day notes, modification time breaks the tie.
 
 By default `.handoffs/` is local and private: add it to the project's `.gitignore` unless the user wants to commit notes for a team handoff. Say which you did.
 
@@ -59,11 +59,15 @@ By default `.handoffs/` is local and private: add it to the project's `.gitignor
 
 On a resume request, find the newest file in `.handoffs/`, read it in full, and state the plan in two or three lines: the goal, where things stand, and the next step you are about to take. Then continue the work. Do not re-derive everything from scratch; the note is the context.
 
+Treat ordering as a locator, not proof. Verify the selected note's branch, commit, working state, and next-step pointers with bounded checks. If they conflict with repository reality, inspect only relevant same-day candidates and compare the same metadata and pointers. Follow a candidate only when it is uniquely supported by current evidence, and say why apparent newest-note ordering was overridden. If none or more than one is safely authoritative, surface the ambiguity and stop before edits. Do not scan older notes or broadly rediscover the repository when no conflict exists.
+
 Read the whole note before acting. If the read comes back partial or truncated, some environments shorten file reads, read it again completely (a plain `cat` works) before trusting it. A half-read note will mislead the resume.
 
 If a note names a file, function, commit, or flag, verify it still exists before relying on it. A handoff reflects what was true when it was written, and the repository may have moved since.
 
 If that targeted check finds a stale pointer, resolve only its current replacement, then carry the verified current path, commit, and command into the resume plan and pointers before continuing. When only a command target moved, keep the recorded operation and substitute the verified current target; missing local setup alone does not make that next verification obsolete. Do not preserve stale arguments or broaden this into repository rediscovery: targeted propagation matters because finding the replacement without updating the next action still sends the resumed session back to obsolete work.
+
+When a note says portable committed or pushed work should exist but the destination lacks it, first verify the local absence and a clean/safe working state. Fetch only the referenced commit or ref, then verify its exact identity and, when relevant, ancestry before checkout or edits. Never recover machine-local or uncommitted artifacts from another checkout. After recovery, use the verified current commit, path, and command in the resume plan. This keeps an untrusted or stale handoff pointer from selecting the wrong code while preserving the work that can actually travel between machines.
 
 ## Output
 

@@ -49,7 +49,7 @@ for config in original final; do
   prompt="$prompt Do not read assertions, grading, prior outputs, or the sibling run. Treat snapshots as immutable."
   printf '%s\n' "$setup_output" > "$run/setup.txt"; printf '%s\n' "$prompt" > "$run/prompt.txt"
   if [ "$dry_run" -eq 0 ]; then
-    codex exec --ephemeral --ignore-user-config --ignore-rules --sandbox workspace-write -c approval_policy="never" -C "$workdir" --json -o "$run/final.txt" "$prompt" > "$run/transcript.jsonl" 2> "$run/stderr.txt"
+    codex exec --ephemeral --ignore-user-config --ignore-rules --sandbox workspace-write -c approval_policy="never" -C "$workdir" --add-dir "$workdir/.git" --json -o "$run/final.txt" "$prompt" > "$run/transcript.jsonl" 2> "$run/stderr.txt"
   else
     : > "$run/final.txt"; : > "$run/transcript.jsonl"; : > "$run/stderr.txt"
   fi

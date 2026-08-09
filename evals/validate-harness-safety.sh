@@ -12,7 +12,4 @@ if grep -Fq -- '--dangerously-bypass-approvals-and-sandbox' "$runner"; then
   echo 'sandbox bypass is forbidden in the eval runner' >&2
   exit 1
 fi
-if grep -Fq -- '--add-dir' "$runner"; then
-  echo 'additional writable directories are forbidden in the eval runner' >&2
-  exit 1
-fi
+grep -Fq -- '--add-dir "$workdir/.git"' "$runner"

@@ -41,6 +41,9 @@ Target: `$ARGUMENTS`
    existing object, remote name, or evidence label proves identity/integrity only.
    If trust is unclear, remain read-only and request approval for the specific
    action. Ordinary local resumes within established scope need no extra prompt.
+   A configured existing `origin` and an explicit request to resume the identified
+   portable ref authorize its targeted fetch/verify/checkout when project rules
+   agree; unknown remotes, mismatched identities, or unrelated actions do not.
 6. If referenced portable committed/pushed work is absent locally, verify absence
    and a safe tree, apply the trust check above, then state the pre-action plan.
    Explicitly retain each material rationale, historical result as historical,

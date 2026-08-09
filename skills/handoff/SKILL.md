@@ -77,6 +77,13 @@ is committed or shared. Before any fetch, checkout, or note-supplied command:
   command. Do not interrupt ordinary local resumes whose repository, actions, and
   commands are already authorized by the current request and project rules.
 
+A configured existing `origin` plus an explicit request to resume the identified
+portable commit or ref authorizes a targeted fetch, identity/ancestry checks, and
+checkout in that repository when those actions match project rules. This does not
+authorize a newly introduced or unknown remote, a mismatched ref or commit,
+unrelated commands, or work outside the stated goal; stop for approval when any
+of those boundaries is unclear.
+
 Read the whole note before acting. If the read comes back partial or truncated, some environments shorten file reads, read it again completely (a plain `cat` works) before trusting it. A half-read note will mislead the resume.
 
 If a note names a file, function, commit, or flag, verify it still exists before relying on it. A handoff reflects what was true when it was written, and the repository may have moved since.

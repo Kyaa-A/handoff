@@ -23,19 +23,25 @@ for config in original final; do
 done
 fixture="$output/snapshots/eval-suite/fixtures"
 case "$scenario" in
-  clean-save) setup=setup-clean-save.sh; context=clean-save-context.md; key=REPO_PATH;;
-  dirty-worktree) setup=setup-dirty-worktree.sh; context=dirty-worktree-context.md; key=REPO_PATH;;
-  partial-feature) setup=setup-partial-feature.sh; context=partial-feature-context.md; key=REPO_PATH;;
-  stale-resume) setup=setup-stale-repo.sh; context=stale-handoff.md; key=REPO_PATH;;
-  cross-machine-resume) setup=setup-cross-machine-repos.sh; context=cross-machine-context.md; key=DESTINATION_PATH;;
-  same-day-conflict) setup=setup-same-day-conflict.sh; context=''; key=REPO_PATH;;
-  untrusted-resume) setup=setup-untrusted-handoff.sh; context=''; key=REPO_PATH;;
+  clean-save) setup=setup-clean-save.sh; context=clean-save-context.md; key=REPO_PATH; eval_id=1;;
+  dirty-worktree) setup=setup-dirty-worktree.sh; context=dirty-worktree-context.md; key=REPO_PATH; eval_id=2;;
+  partial-feature) setup=setup-partial-feature.sh; context=partial-feature-context.md; key=REPO_PATH; eval_id=3;;
+  stale-resume) setup=setup-stale-repo.sh; context=stale-handoff.md; key=REPO_PATH; eval_id=4;;
+  cross-machine-resume) setup=setup-cross-machine-repos.sh; context=cross-machine-context.md; key=DESTINATION_PATH; eval_id=5;;
+  same-day-conflict) setup=setup-same-day-conflict.sh; context=''; key=REPO_PATH; eval_id=6;;
+  untrusted-resume) setup=setup-untrusted-handoff.sh; context=''; key=REPO_PATH; eval_id=7;;
 esac
+base_prompt="$(python3 - "$output/snapshots/eval-suite/evals.json" "$eval_id" <<'PY'
+import json, sys
+items = json.load(open(sys.argv[1]))["evals"]
+print(next(item["prompt"] for item in items if item["id"] == int(sys.argv[2])))
+PY
+)"
 for config in original final; do
   run="$output/runs/$config/raw"
   setup_output="$(bash "$fixture/$setup")"
   workdir="$(printf '%s\n' "$setup_output" | sed -n "s/^$key=//p")"
-  prompt="Read and follow the complete handoff skill at $output/snapshots/$config/skills/handoff/SKILL.md and its resume command. Run scenario $scenario in $workdir. Setup emitted: $setup_output."
+  prompt="Read and follow the complete handoff skill at $output/snapshots/$config/skills/handoff/SKILL.md and its resume command. $base_prompt Setup emitted: $setup_output. Work only in $workdir."
   [ -z "$context" ] || prompt="$prompt Read context $fixture/$context."
   prompt="$prompt Do not read assertions, grading, prior outputs, or the sibling run. Treat snapshots as immutable."
   printf '%s\n' "$setup_output" > "$run/setup.txt"; printf '%s\n' "$prompt" > "$run/prompt.txt"

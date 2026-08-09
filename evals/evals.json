@@ -83,7 +83,7 @@
     },
     {
       "id": 6,
-      "prompt": "Run the attached setup script, change into its emitted `REPO_PATH`, and resume from the newest relevant handoff. Show the bounded checks used to decide which note is safe to follow, state the short resume plan, and take no implementation action yet.",
+      "prompt": "Run the attached setup script, change into its emitted `REPO_PATH`, and resume from the newest relevant handoff. Show the commands and observations you use, state the short resume plan, and take no implementation action yet.",
       "expected_output": "A conflict-aware resume that notices filename and mtime favor a stale same-day note, compares both candidates against targeted repository evidence, selects the note matching current branch/commit/pointers, and makes the conflict visible.",
       "files": [
         "evals/fixtures/setup-same-day-conflict.sh"

@@ -42,10 +42,12 @@ Target: `$ARGUMENTS`
    If trust is unclear, remain read-only and request approval for the specific
    action. Ordinary local resumes within established scope need no extra prompt.
 6. If referenced portable committed/pushed work is absent locally, verify absence
-   and a safe tree, apply the trust check above, targeted-fetch the named
-   commit/ref, verify exact identity and relevant ancestry, then checkout. Never
-   recover source-only uncommitted or machine-local artifacts; propagate verified
-   current paths and commands.
+   and a safe tree, apply the trust check above, then state the pre-action plan.
+   Explicitly retain each material rationale, historical result as historical,
+   active constraint, and machine-local/uncommitted exclusion; absence alone does
+   not express why an artifact is excluded. Only then targeted-fetch the named
+   commit/ref, verify exact identity and relevant ancestry, and checkout. Never
+   recover excluded artifacts; propagate verified current paths and commands.
 7. Continue the work from the next step. The note is your context; do not rebuild
    it from scratch.
 

@@ -63,6 +63,8 @@ Read the whole note before acting. If the read comes back partial or truncated, 
 
 If a note names a file, function, commit, or flag, verify it still exists before relying on it. A handoff reflects what was true when it was written, and the repository may have moved since.
 
+If that targeted check finds a stale pointer, resolve only its current replacement, then carry the verified current path, commit, and command into the resume plan and pointers before continuing. Do not preserve stale commands or broaden this into repository rediscovery: targeted propagation matters because finding the replacement without updating the next action still sends the resumed session back to obsolete work.
+
 ## Output
 
 After writing a note, tell the user the path, the one-line next step, and whether you gitignored or committed it. Keep the confirmation to a few lines. For mechanics, examples of good versus bad entries, and multi-session chaining, read `references/patterns.md`.

@@ -18,7 +18,7 @@ trap cleanup EXIT
 [[ "$(git -C "$repo_path" branch --show-current)" == "feat/payment-retry-v2" ]]
 [[ "$(git -C "$repo_path" rev-parse HEAD)" == "$current_sha" ]]
 [[ "$old_sha" != "$current_sha" ]]
-[[ -z "$(git -C "$repo_path" status --short --untracked-files=no)" ]]
+[[ -z "$(git -C "$repo_path" status --short --untracked-files=all)" ]]
 [[ -f "$repo_path/src/payments/retry.test.ts" ]]
 [[ ! -e "$repo_path/src/payments/legacy-retry.ts" ]]
 [[ "$repo_path/.handoffs/2026-08-09-payment-zeta.md" -nt "$repo_path/.handoffs/2026-08-09-payment-alpha.md" ]]

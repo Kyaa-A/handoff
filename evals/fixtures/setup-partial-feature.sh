@@ -10,6 +10,7 @@ mkdir -p "$repo_path/src/dispatch"
 printf '%s\n' 'export const createDispatch = () => "created";' > "$repo_path/src/dispatch/dispatch.service.ts"
 git -C "$repo_path" add .
 git -C "$repo_path" commit -qm "feat: add request id schema"
+setup_sha="$(git -C "$repo_path" rev-parse HEAD)"
 
 printf '%s\n' 'export const createDispatch = () => "checks request id";' > "$repo_path/src/dispatch/dispatch.service.ts"
 cat > "$repo_path/src/dispatch/idempotency.repository.ts" <<'EOF'
@@ -18,4 +19,4 @@ export const recordRequest = () => {
 };
 EOF
 
-printf 'REPO_PATH=%s\n' "$repo_path"
+printf 'REPO_PATH=%s\nSETUP_SHA=%s\n' "$repo_path" "$setup_sha"

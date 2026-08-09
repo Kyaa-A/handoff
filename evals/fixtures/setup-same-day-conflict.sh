@@ -10,6 +10,7 @@ git -C "$repo_path" config user.email eval@example.test
 git -C "$repo_path" config user.name "Handoff Eval"
 git -C "$repo_path" switch -q -c main
 mkdir -p "$repo_path/src/payments" "$repo_path/.handoffs"
+printf '%s\n' '.handoffs/' > "$repo_path/.gitignore"
 printf '%s\n' 'export const retryPayment = () => "queued";' > "$repo_path/src/payments/retry.ts"
 git -C "$repo_path" add .
 git -C "$repo_path" commit -qm "feat: add payment retry"

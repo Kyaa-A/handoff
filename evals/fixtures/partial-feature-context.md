@@ -10,7 +10,8 @@ Repository: `/work/dispatch-api`
   ?? src/dispatch/idempotency.repository.ts
   ```
 
-- Commit `71c4e2a` added the request-id column and unique index.
+- The setup script's emitted `SETUP_SHA` added the request-id column and unique
+  index. Use that exact emitted value rather than inventing or copying a SHA.
 - `dispatch.service.ts` calls the new repository before creating a dispatch.
 - `idempotency.repository.ts` can insert request IDs, but the conflict path is a
   TODO and currently throws `Error("duplicate request")`.

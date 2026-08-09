@@ -38,6 +38,7 @@
       "prompt": "We're pausing this feature. Read the attached session context and leave a handoff that a fresh agent can act on without the conversation history.",
       "expected_output": "A save note that independently separates committed, incomplete, and uncertain work; records dirty state and database-concurrency rationale; ignores deferred logging cleanup; and chooses the conflict lookup plus real-Postgres test as next.",
       "files": [
+        "evals/fixtures/setup-partial-feature.sh",
         "evals/fixtures/partial-feature-context.md"
       ],
       "expectations": [

@@ -63,7 +63,7 @@ Read the whole note before acting. If the read comes back partial or truncated, 
 
 If a note names a file, function, commit, or flag, verify it still exists before relying on it. A handoff reflects what was true when it was written, and the repository may have moved since.
 
-If that targeted check finds a stale pointer, resolve only its current replacement, then carry the verified current path, commit, and command into the resume plan and pointers before continuing. Do not preserve stale commands or broaden this into repository rediscovery: targeted propagation matters because finding the replacement without updating the next action still sends the resumed session back to obsolete work.
+If that targeted check finds a stale pointer, resolve only its current replacement, then carry the verified current path, commit, and command into the resume plan and pointers before continuing. When only a command target moved, keep the recorded operation and substitute the verified current target; missing local setup alone does not make that next verification obsolete. Do not preserve stale arguments or broaden this into repository rediscovery: targeted propagation matters because finding the replacement without updating the next action still sends the resumed session back to obsolete work.
 
 ## Output
 

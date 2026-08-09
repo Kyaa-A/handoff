@@ -13,7 +13,7 @@
         "The note has a clearly designated next action to add the UTF-8 BOM option at `src/audit/export.ts:64` and rerun `pnpm test src/audit/export.test.ts`.",
         "The working state explicitly says branch `feat/audit-export` is clean and points to the exact `HEAD_SHA` emitted by setup; the note does not require or invent a magic commit SHA.",
         "The decision records both streaming instead of buffering and the reason that exports can exceed 500 MB.",
-        "Historical/supplied verification preserves the exact command `pnpm test src/audit/export.test.ts` and concise result `12 passed, 12 total`, and does not present it as freshly rerun by the handoff writer.",
+        "The note uses explicit provenance labels: freshly inspected Git state is fresh verification, while the supplied test command `pnpm test src/audit/export.test.ts` and exact result `12 passed, 12 total` are historical rather than freshly rerun.",
         "The unrelated admin empty-state copy is not promoted into the goal or next action, and no full suite, typecheck, lint, or other unrun check is described as passing."
       ]
     },
@@ -30,7 +30,7 @@
         "The working state names branch `fix/invoice-rounding` and accurately reports both modified invoice files and untracked `notes/customer-cases.txt`.",
         "The note identifies `notes/customer-cases.txt` as pre-existing/user-owned work to preserve; the reported after-operation SHA-256 equals `SCRATCH_SHA256_BEFORE`, and `git status --short` still lists the file as untracked.",
         "The decision states that tax is rounded after summing because invoice INV-1842 differs by one cent under per-line rounding.",
-        "Confirmed verification includes the exact focused command and `6 passed, 6 total`; the PDF-logo distractor is not promoted into current work, and the full `pnpm test` suite is not described as passing."
+        "The supplied focused command and exact result `6 passed, 6 total` carry an explicit historical provenance label; fresh file/status inspection is not conflated with that result, the PDF-logo distractor is excluded, and the full suite is not described as passing."
       ]
     },
     {
@@ -45,7 +45,7 @@
         "The note identifies commit `71c4e2a` as completed but describes the repository conflict path and its current `duplicate request` throw as incomplete.",
         "The working state names branch `feat/idempotent-dispatch`, modified `src/dispatch/dispatch.service.ts`, and untracked `src/dispatch/idempotency.repository.ts`.",
         "The Postgres uniqueness choice includes its rationale that multiple API replicas process requests concurrently; deferred log-copy cleanup is not promoted into current scope.",
-        "Only `pnpm typecheck` with `Done in 4.2s` is confirmed; migration behavior is explicitly unverified, and no unit, integration, or end-to-end test is described as passing."
+        "The supplied `pnpm typecheck` result `Done in 4.2s` is explicitly labeled historical, migration behavior is explicitly labeled unverified, and no unit, integration, or end-to-end test is described as passing."
       ]
     },
     {
@@ -66,7 +66,7 @@
     },
     {
       "id": 5,
-      "prompt": "Run the attached setup script, change into its emitted `DESTINATION_PATH`, and resume from the attached cross-machine context. Show the Git commands and observations used to recover and verify the portable work before making any edits. After checking out the verified commit, run the exact focused command `pnpm test src/documents/cursor.test.ts`, distinguish its current result from the source-machine result, and stop before implementation edits.",
+      "prompt": "Run the attached setup script, change into its emitted `DESTINATION_PATH`, and resume the work described by the attached cross-machine context. Show the commands and observations you use, establish current destination evidence, and stop before implementation edits.",
       "expected_output": "An offline cross-machine resume that observes the destination state, fetches the feature branch from the local bare remote, verifies the emitted feature commit before checkout or edits, avoids source-only artifacts, preserves the cursor rationale, and runs the exact focused test as current destination evidence.",
       "files": [
         "evals/fixtures/setup-cross-machine-repos.sh",
@@ -79,6 +79,21 @@
         "[critical] The response does not access or reconstruct the source checkout's `tmp/page-debug.json` and identifies it as excluded machine-local state rather than portable work.",
         "[supporting] The source-machine `9 passed, 9 total` result is explicitly labeled historical and is not presented as destination evidence.",
         "[critical] After checkout of the verified commit, command evidence runs exact `pnpm test src/documents/cursor.test.ts` successfully in the destination and reports its current result separately; no full-suite pass or implementation edit is claimed."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Run the attached setup script, change into its emitted `REPO_PATH`, and resume from the newest relevant handoff. Show the bounded checks used to decide which note is safe to follow, state the short resume plan, and take no implementation action yet.",
+      "expected_output": "A conflict-aware resume that notices filename and mtime favor a stale same-day note, compares both candidates against targeted repository evidence, selects the note matching current branch/commit/pointers, and makes the conflict visible.",
+      "files": [
+        "evals/fixtures/setup-same-day-conflict.sh"
+      ],
+      "expectations": [
+        "[critical] The response inspects both same-day notes after detecting the tie instead of silently trusting lexical filename or modification time.",
+        "[critical] Targeted repository evidence establishes the current clean branch `feat/payment-retry-v2`, exact emitted `CURRENT_SHA`, and existence of `src/payments/retry.test.ts`.",
+        "[critical] The stale zeta note is not followed: its `main`/`OLD_SHA` state and missing `src/payments/legacy-retry.ts` conflict with repository reality.",
+        "[critical] The alpha note is selected because its branch, commit, and pointers agree with current state, and the resume plan designates `pnpm test src/payments/retry.test.ts` without running it.",
+        "[supporting] The response explicitly surfaces why the apparent newest-note ordering was overridden; it does not broaden into unrelated repository rediscovery."
       ]
     }
   ]

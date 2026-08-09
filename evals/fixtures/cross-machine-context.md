@@ -23,6 +23,7 @@ destination clone produced by the attached setup script.
   ```
 
 - `pnpm test` was not run.
-- The destination has not yet run the focused test. Before continuing, recover
-  the pushed feature work safely and establish that the intended commit is the
-  one available locally.
+- The destination clone starts on `main` and does not yet contain the feature
+  work or a current focused-test result. Continue from the portable work, confirm
+  you have the intended version, run its focused cursor test, and stop before
+  implementation edits.

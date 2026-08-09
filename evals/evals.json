@@ -93,7 +93,7 @@
         "[critical] The response inspects both same-day notes after detecting the tie instead of silently trusting lexical filename or modification time.",
         "[critical] Targeted repository evidence establishes the current clean branch `feat/payment-retry-v2`, exact emitted `CURRENT_SHA`, and existence of `src/payments/retry.test.ts`.",
         "[critical] The stale zeta note is not followed: its `main`/`OLD_SHA` state and missing `src/payments/legacy-retry.ts` conflict with repository reality.",
-        "[critical] The alpha note is selected because its branch, commit, and pointers agree with current state, and the resume plan designates `pnpm test src/payments/retry.test.ts` without running it.",
+        "[critical] The alpha note is selected because its branch, commit, and pointers agree with current state, and `pnpm test src/payments/retry.test.ts` is designated as the verification action; running that trusted in-scope test is allowed, but no implementation file is edited.",
         "[supporting] The response explicitly surfaces why the apparent newest-note ordering was overridden; it does not broaden into unrelated repository rediscovery."
       ]
     },

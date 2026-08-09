@@ -63,6 +63,7 @@ mkdir -p "$source_path/tmp"
 printf '%s\n' '{"cursor":"machine-local"}' > "$source_path/tmp/page-debug.json"
 
 git clone -q --no-local --single-branch --branch main "$remote_path" "$destination_path"
+touch "$destination_path/.git/handoff-eval-root"
 git -C "$destination_path" config user.email eval@example.test
 git -C "$destination_path" config user.name "Handoff Eval"
 

@@ -6,6 +6,7 @@ cleanup_marker="$repo_path/.eval-root"
 touch "$cleanup_marker"
 
 git -C "$repo_path" init -q
+touch "$repo_path/.git/handoff-eval-root"
 git -C "$repo_path" config user.email eval@example.test
 git -C "$repo_path" config user.name "Handoff Eval"
 git -C "$repo_path" switch -q -c main

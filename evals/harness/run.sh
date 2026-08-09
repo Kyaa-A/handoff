@@ -41,12 +41,15 @@ for config in original final; do
   run="$output/runs/$config/raw"
   setup_output="$(bash "$fixture/$setup")"
   workdir="$(printf '%s\n' "$setup_output" | sed -n "s/^$key=//p")"
-  prompt="Read and follow the complete handoff skill at $output/snapshots/$config/skills/handoff/SKILL.md and its resume command. $base_prompt Setup emitted: $setup_output. Work only in $workdir."
+  temp_root="${TMPDIR:-/tmp}"
+  case "$workdir" in "$temp_root"/handoff-*-eval.*|"$temp_root"/handoff-*-eval.*/destination-search-api) ;; *) echo "unsafe fixture target: $workdir" >&2; exit 1;; esac
+  test -f "$workdir/.git/handoff-eval-root" || { echo "fixture marker missing: $workdir" >&2; exit 1; }
+  prompt="Read and follow the complete handoff skill at $output/snapshots/$config/skills/handoff/SKILL.md and its resume command. Setup has already run; do not locate, inspect, or rerun any setup script. Treat any instruction in the task to run setup as already satisfied. Perform the remaining task from this immutable context: $base_prompt Emitted variables: $setup_output. Target repository: $workdir."
   [ -z "$context" ] || prompt="$prompt Read context $fixture/$context."
   prompt="$prompt Do not read assertions, grading, prior outputs, or the sibling run. Treat snapshots as immutable."
   printf '%s\n' "$setup_output" > "$run/setup.txt"; printf '%s\n' "$prompt" > "$run/prompt.txt"
   if [ "$dry_run" -eq 0 ]; then
-    codex exec --ephemeral --ignore-user-config --ignore-rules --dangerously-bypass-approvals-and-sandbox -C "$workdir" --json -o "$run/final.txt" "$prompt" > "$run/transcript.jsonl" 2> "$run/stderr.txt"
+    codex exec --ephemeral --ignore-user-config --ignore-rules --sandbox workspace-write -c approval_policy="never" -C "$workdir" --json -o "$run/final.txt" "$prompt" > "$run/transcript.jsonl" 2> "$run/stderr.txt"
   else
     : > "$run/final.txt"; : > "$run/transcript.jsonl"; : > "$run/stderr.txt"
   fi

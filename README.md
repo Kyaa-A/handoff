@@ -15,7 +15,7 @@ The skill writes a handoff note when a session winds down, and reads it back to 
 - **Captures state, not transcript.** Goal, what is done, what is in progress, decisions and why, the next step, and pointers to the key files and commits.
 - **Why over what.** The repository already records what changed. The note records why a path was chosen, which is the expensive thing to rediscover.
 - **Points, does not paste.** References `path:line`, commit SHAs, and URLs instead of copying code, so the note stays correct and tiny.
-- **Confirmed versus assumed.** Separates verified work from believed-but-unverified, so a resume never trusts a stale claim.
+- **Evidence provenance.** Separates freshly verified work, supplied historical results, and believed-but-unverified claims, so a resume never treats stale evidence as current.
 - **Lean by design.** Targets a screenful. A handoff is an index, not a log.
 
 ## File structure

@@ -55,6 +55,8 @@ handoff/
 
 `skills/handoff/SKILL.md` carries the rules and triggers. `skills/handoff/references/patterns.md` holds the template, good-versus-bad example entries, the `.handoffs/` storage layout, and how to chain notes across several sessions, which Claude reads when it needs the detail.
 
+The architecture is Markdown-first: the skill, references, and commands define the product behavior. The only runtime code is the small, dependency-free Node.js update checker used by managed plugin installs. It remains JavaScript because a TypeScript migration would add a build and shipped dependencies without improving the current runtime boundary. CI uses Node 20 to test that checker, validate the reliability fixtures and JSON manifests, and inspect the package contents.
+
 ## Examples
 
 `examples/` holds a complete handoff note and its badly-written twin, so the difference between a note you can resume from and one you cannot is concrete:

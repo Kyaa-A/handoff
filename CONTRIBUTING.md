@@ -33,7 +33,20 @@ This skill has no build step. To try it:
 2. Do a little throwaway work, then ask Claude to "save my progress" and inspect the note it writes to `.handoffs/`.
 3. Start a fresh session and ask it to "pick up where I left off." Confirm the resume is accurate and acts from the note rather than guessing.
 
-Use Node 20 or newer. Run `npm test` for updater integration tests and `bash evals/validate-all.sh` for handoff reliability fixtures. Validate Claude packaging with `claude plugin validate .`. Update checks must never change files under the plugin root or execute an update command.
+Use Node 20 or newer. The project is intentionally Markdown-first and has no build step: keep the release checker in plain, dependency-free JavaScript unless a future runtime boundary makes a TypeScript build pay for itself. A TypeScript migration is not part of the current architecture.
+
+Run the same core checks as CI:
+
+```bash
+npm ci
+npm test
+bash evals/validate-all.sh
+git ls-files -z '*.json' | xargs -0 node -e 'for (const path of process.argv.slice(1)) JSON.parse(require("node:fs").readFileSync(path, "utf8"))'
+npm pack --dry-run
+git diff --check
+```
+
+Validate Claude packaging with `claude plugin validate .` when that CLI is available. Update checks must never change files under the plugin root or execute an update command. GitHub Actions dependencies are pinned to full commit SHAs; keep those pins intact when Dependabot proposes updates.
 
 ## Scope
 

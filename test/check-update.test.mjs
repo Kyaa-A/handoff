@@ -244,10 +244,11 @@ test('hook and marketplace manifests parse and versions match', async () => {
     'hooks/codex-hooks.json',
   ];
   const documents = Object.fromEntries(await Promise.all(paths.map(async (path) => [path, JSON.parse(await readFile(join(repoRoot, path), 'utf8'))])));
-  assert.equal(documents['.claude-plugin/plugin.json'].version, '0.4.1');
-  assert.equal(documents['.codex-plugin/plugin.json'].version, '0.4.1');
-  assert.equal(documents['.agents/plugins/marketplace.json'].plugins[0].version, '0.4.1');
-  assert.equal(documents['package.json'].version, '0.4.1');
+  assert.equal(documents['.claude-plugin/plugin.json'].version, '0.4.2');
+  assert.equal(documents['.claude-plugin/plugin.json'].hooks, undefined);
+  assert.equal(documents['.codex-plugin/plugin.json'].version, '0.4.2');
+  assert.equal(documents['.agents/plugins/marketplace.json'].plugins[0].version, '0.4.2');
+  assert.equal(documents['package.json'].version, '0.4.2');
   assert.equal(documents['hooks/hooks.json'].hooks.SessionStart[0].matcher, 'startup');
   assert.equal(documents['hooks/hooks.json'].hooks.SessionStart[0].hooks.length, 1);
   assert.equal(documents['hooks/hooks.json'].hooks.SessionStart[0].hooks[0].timeout, 5);

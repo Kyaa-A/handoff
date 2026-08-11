@@ -1,6 +1,6 @@
 {
   "name": "handoff",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Write lean, resumable handoff notes and safely continue work in a fresh session.",
   "author": {
     "name": "Asnari Pacalna",

@@ -90,7 +90,28 @@ async function writeCache(data, platform, installed) {
     await handle.sync();
     await handle.close();
     handle = undefined;
-    await rename(temporary, destination);
+    const windowsReplacement = process.platform === 'win32'
+      || (process.env.NODE_ENV === 'test' && process.env.HANDOFF_UPDATE_TEST_WINDOWS_REPLACE === '1');
+    if (!windowsReplacement) {
+      await rename(temporary, destination);
+      return;
+    }
+
+    const backup = join(data, `.${CACHE_FILE}.${process.pid}.${randomBytes(6).toString('hex')}.bak`);
+    let backedUp = false;
+    try {
+      try {
+        await rename(destination, backup);
+        backedUp = true;
+      } catch (error) {
+        if (error?.code !== 'ENOENT') throw error;
+      }
+      await rename(temporary, destination);
+      if (backedUp) await unlink(backup);
+    } catch (error) {
+      if (backedUp) await rename(backup, destination).catch(() => {});
+      throw error;
+    }
   } finally {
     await handle?.close().catch(() => {});
     await unlink(temporary).catch(() => {});

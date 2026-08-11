@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { mkdtemp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import test from 'node:test';
 
 const repoRoot = resolve(import.meta.dirname, '..');
@@ -211,6 +211,28 @@ test('checker never writes inside the plugin root and cache replacement is atomi
   }
 });
 
+test('expired cache is safely replaced on a second write', async () => {
+  const { root, data } = await fixture();
+  let requests = 0;
+  const remote = await serve((_req, res) => {
+    requests += 1;
+    res.end(JSON.stringify({ name: 'handoff', version: '0.2.0' }));
+  });
+  try {
+    const extraEnv = { HANDOFF_UPDATE_TTL_MS: '0', HANDOFF_UPDATE_TEST_WINDOWS_REPLACE: '1' };
+    await run({ root, data, url: remote.url, extraEnv });
+    const first = JSON.parse(await readFile(join(data, 'update-check.json'), 'utf8'));
+    await new Promise((resolve) => setTimeout(resolve, 2));
+    await run({ root, data, url: remote.url, extraEnv });
+    const second = JSON.parse(await readFile(join(data, 'update-check.json'), 'utf8'));
+    assert.equal(requests, 2);
+    assert.ok(second.checkedAt > first.checkedAt);
+    assert.deepEqual(await readdir(data), ['update-check.json']);
+  } finally {
+    await remote.close();
+  }
+});
+
 test('hook and marketplace manifests parse and versions match', async () => {
   const paths = [
     'package.json',
@@ -270,21 +292,20 @@ test('hook and marketplace manifests parse and versions match', async () => {
   });
   assert.doesNotMatch(shell.stdout, /\$(?:\{|)PLUGIN_(?:ROOT|DATA)/);
 
-  const windowsRoot = String.raw`C:\Users\Example User\.codex\plugins\handoff`;
-  const windowsData = String.raw`C:\Users\Example User\.codex\plugin data\handoff`;
-  const expanded = codexHook.commandWindows
-    .replaceAll('%PLUGIN_ROOT%', windowsRoot)
-    .replaceAll('%PLUGIN_DATA%', windowsData);
-  assert.doesNotMatch(expanded, /%PLUGIN_(?:ROOT|DATA)%/);
-  const tokens = [...expanded.matchAll(/"([^"]*)"|(\S+)/g)].map((match) => match[1] ?? match[2]);
-  assert.deepEqual(tokens, [
-    'node',
-    `${windowsRoot}\\scripts\\check-update.mjs`,
-    '--platform',
-    'codex',
-    '--root',
-    windowsRoot,
-    '--data',
-    windowsData,
-  ]);
+  assert.equal(
+    codexHook.commandWindows,
+    'node "$env:PLUGIN_ROOT\\scripts\\check-update.mjs" --platform codex --root "$env:PLUGIN_ROOT" --data "$env:PLUGIN_DATA"',
+  );
+  assert.doesNotMatch(codexHook.commandWindows, /%PLUGIN_(?:ROOT|DATA)%/);
+
+  if (spawnSync('pwsh', ['-NoProfile', '-Command', '$PSVersionTable.PSVersion.Major']).status === 0) {
+    const windowsRoot = String.raw`C:\Users\Example User\.codex\plugins\handoff`;
+    const windowsData = String.raw`C:\Users\Example User\.codex\plugin data\handoff`;
+    const result = spawnSync('pwsh', ['-NoProfile', '-Command', `& { param([Parameter(ValueFromRemainingArguments=\$true)] \$rest) \$rest -join [Environment]::NewLine } ${codexHook.commandWindows}`], {
+      env: { ...process.env, PLUGIN_ROOT: windowsRoot, PLUGIN_DATA: windowsData },
+      encoding: 'utf8',
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.doesNotMatch(result.stdout, /\$env:PLUGIN_(?:ROOT|DATA)/);
+  }
 });

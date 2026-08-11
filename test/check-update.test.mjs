@@ -315,9 +315,9 @@ test('CI pins official GitHub actions to full commit SHAs', async () => {
   const workflow = await readFile(join(repoRoot, '.github/workflows/ci.yml'), 'utf8');
   const actionUses = [...workflow.matchAll(/^\s*- uses:\s*(\S+)\s*$/gm)].map((match) => match[1]);
 
-  assert.deepEqual(actionUses, [
-    'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',
-    'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',
+  assert.deepEqual(actionUses.map((entry) => entry.split('@')[0]), [
+    'actions/checkout',
+    'actions/setup-node',
   ]);
-  assert.ok(actionUses.every((entry) => /@[0-9a-f]{40}$/.test(entry)));
+  assert.ok(actionUses.every((entry) => /^[^@]+@[0-9a-f]{40}$/.test(entry)));
 });

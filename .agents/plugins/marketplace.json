@@ -1,0 +1,14 @@
+{
+  "name": "handoff",
+  "plugins": [
+    {
+      "name": "handoff",
+      "version": "0.3.3",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

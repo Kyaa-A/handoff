@@ -1,6 +1,6 @@
 # Security Policy
 
-handoff is a documentation-only Claude Agent Skill: it ships Markdown files (`SKILL.md`, `references/patterns.md`, and the command prompts) with no executable code, no build step, and no runtime. The practical security surface is small. But skill content becomes instructions an AI agent will follow, and the notes it writes can capture project detail, so a few things are worth taking seriously.
+handoff is an agent skill and plugin. Alongside its instructions, it ships a startup update checker. The checker makes a best-effort HTTPS request to this repository's raw GitHub manifest, writes a version/timestamp cache only in the host-provided plugin data directory, and prints manual update commands. It does not download releases, install updates, modify the plugin directory, or read secrets.
 
 ## Reporting a vulnerability
 
@@ -17,6 +17,7 @@ Expect an initial response within a few days. Please allow a reasonable window t
 - Content in the skill or command files that could induce an agent to act unsafely, leak data, or write secrets into a handoff note.
 - Guidance that would cause handoff notes to be committed or shared when they should stay local.
 - Misleading or hidden instructions that could cause unsafe behavior in a tool-using agent.
+- Update-checker network, manifest-validation, cache, hook-command, and terminal-output vulnerabilities in `scripts/check-update.mjs` and `hooks/`.
 
 ## A note on handoff contents
 

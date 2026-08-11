@@ -1,0 +1,133 @@
+#!/usr/bin/env node
+
+import { randomBytes } from 'node:crypto';
+import { mkdir, open, readFile, rename, unlink } from 'node:fs/promises';
+import { join } from 'node:path';
+
+const CONFIG = {
+  claude: {
+    manifest: '.claude-plugin/plugin.json',
+    remote: 'https://raw.githubusercontent.com/Kyaa-A/handoff/main/.claude-plugin/plugin.json',
+    message(installed, latest) {
+      return `handoff ${installed} -> ${latest} update available\nRun:\n  claude plugin marketplace update handoff\n  claude plugin update handoff@handoff\nThen restart Claude Code or run /reload-plugins.`;
+    },
+  },
+  codex: {
+    manifest: '.codex-plugin/plugin.json',
+    remote: 'https://raw.githubusercontent.com/Kyaa-A/handoff/main/.codex-plugin/plugin.json',
+    message(installed, latest) {
+      return `handoff ${installed} -> ${latest} update available\nRun:\n  codex plugin marketplace upgrade handoff\n  codex plugin remove handoff@handoff\n  codex plugin add handoff@handoff\nThen start a new Codex session.`;
+    },
+  },
+};
+
+const CACHE_FILE = 'update-check.json';
+const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_TIMEOUT_MS = 3000;
+const SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
+
+function argsToObject(args) {
+  const result = {};
+  for (let index = 0; index < args.length; index += 2) {
+    const key = args[index];
+    const value = args[index + 1];
+    if (!key?.startsWith('--') || value === undefined) return null;
+    result[key.slice(2)] = value;
+  }
+  return result;
+}
+
+function testNumber(name, fallback, maximum = Number.MAX_SAFE_INTEGER) {
+  if (process.env.NODE_ENV !== 'test') return fallback;
+  const value = Number(process.env[name]);
+  return Number.isInteger(value) && value >= 0 && value <= maximum ? value : fallback;
+}
+
+function parseVersion(value) {
+  const match = typeof value === 'string' ? SEMVER.exec(value) : null;
+  return match ? match.slice(1) : null;
+}
+
+function isNewer(current, latest) {
+  for (let index = 0; index < 3; index += 1) {
+    if (latest[index].length !== current[index].length) {
+      return latest[index].length > current[index].length;
+    }
+    if (latest[index] !== current[index]) return latest[index] > current[index];
+  }
+  return false;
+}
+
+function remoteUrl(config) {
+  if (process.env.NODE_ENV === 'test' && process.env.HANDOFF_UPDATE_TEST_URL) {
+    const testUrl = new URL(process.env.HANDOFF_UPDATE_TEST_URL);
+    if (testUrl.protocol === 'http:' && ['127.0.0.1', '::1', 'localhost'].includes(testUrl.hostname)) return testUrl;
+    if (testUrl.protocol === 'https:') return testUrl;
+    throw new Error('invalid test URL');
+  }
+  const url = new URL(config.remote);
+  if (url.protocol !== 'https:') throw new Error('invalid production URL');
+  return url;
+}
+
+async function freshCache(data, platform, installed, ttlMs) {
+  const cache = JSON.parse(await readFile(join(data, CACHE_FILE), 'utf8'));
+  return cache.platform === platform
+    && cache.version === installed
+    && Number.isFinite(cache.checkedAt)
+    && Date.now() - cache.checkedAt >= 0
+    && Date.now() - cache.checkedAt < ttlMs;
+}
+
+async function writeCache(data, platform, installed) {
+  await mkdir(data, { recursive: true, mode: 0o700 });
+  const destination = join(data, CACHE_FILE);
+  const temporary = join(data, `.${CACHE_FILE}.${process.pid}.${randomBytes(6).toString('hex')}.tmp`);
+  let handle;
+  try {
+    handle = await open(temporary, 'wx', 0o600);
+    await handle.writeFile(`${JSON.stringify({ platform, version: installed, checkedAt: Date.now() })}\n`);
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+    await rename(temporary, destination);
+  } finally {
+    await handle?.close().catch(() => {});
+    await unlink(temporary).catch(() => {});
+  }
+}
+
+async function main() {
+  if (process.env.HANDOFF_UPDATE_CHECK === '0') return;
+  const args = argsToObject(process.argv.slice(2));
+  const config = args && CONFIG[args.platform];
+  if (!config || !args.root || !args.data) return;
+
+  const manifest = JSON.parse(await readFile(join(args.root, config.manifest), 'utf8'));
+  if (manifest.name !== 'handoff') return;
+  const current = parseVersion(manifest.version);
+  if (!current) return;
+
+  const ttlMs = testNumber('HANDOFF_UPDATE_TTL_MS', DEFAULT_TTL_MS);
+  try {
+    if (await freshCache(args.data, args.platform, manifest.version, ttlMs)) return;
+  } catch {}
+
+  const timeoutMs = testNumber('HANDOFF_UPDATE_TIMEOUT_MS', DEFAULT_TIMEOUT_MS, DEFAULT_TIMEOUT_MS);
+  const response = await fetch(remoteUrl(config), { signal: AbortSignal.timeout(timeoutMs) });
+  if (!response.ok) return;
+  const remote = await response.json();
+  if (remote?.name !== 'handoff') return;
+  const latest = parseVersion(remote.version);
+  if (!latest) return;
+
+  try {
+    await writeCache(args.data, args.platform, manifest.version);
+  } catch {}
+
+  if (isNewer(current, latest)) {
+    process.stdout.write(`${JSON.stringify({ continue: true, systemMessage: config.message(manifest.version, remote.version) })}\n`);
+  }
+}
+
+await main().catch(() => {});

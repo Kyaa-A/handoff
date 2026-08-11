@@ -11,4 +11,5 @@
   "repository": "https://github.com/Kyaa-A/handoff",
   "license": "MIT",
   "keywords": ["handoff", "session", "context", "memory", "continuity", "claude-code", "codex"]
+  ,"hooks": "./hooks/hooks.json"
 }

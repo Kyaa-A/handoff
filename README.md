@@ -25,6 +25,15 @@ handoff/
 ├── .claude-plugin/
 │   ├── plugin.json       # plugin manifest (name, version, metadata)
 │   └── marketplace.json  # one-plugin marketplace, so it installs from this repo
+├── .codex-plugin/
+│   └── plugin.json       # Codex plugin manifest
+├── .agents/plugins/
+│   └── marketplace.json  # Codex marketplace
+├── hooks/
+│   ├── hooks.json        # Claude startup update check
+│   └── codex-hooks.json  # Codex startup update check
+├── scripts/
+│   └── check-update.mjs  # dependency-free release checker
 ├── skills/
 │   └── handoff/
 │       ├── SKILL.md      # the rules the agent loads (Claude Code or Codex)
@@ -57,7 +66,7 @@ handoff/
 
 Two ways to install, depending on whether you want a managed plugin or a plain skill.
 
-### As a plugin (from this repo's marketplace)
+### As a Claude Code plugin
 
 In Claude Code, add the marketplace and install the plugin:
 
@@ -66,7 +75,7 @@ In Claude Code, add the marketplace and install the plugin:
 /plugin install handoff@handoff
 ```
 
-You get version tracking, one-command updates, and the namespaced commands `/handoff:save` and `/handoff:resume`.
+You get version tracking, managed updates, startup update notices, and the namespaced commands `/handoff:save` and `/handoff:resume`. Claude Code manages the plugin; the notice itself is informational and does not ask yes/no or install anything.
 
 ### As a plain skill (for a bare `/handoff`)
 
@@ -79,7 +88,18 @@ cp -r handoff/skills/handoff ~/.claude/skills/handoff
 
 Installed this way the skill triggers automatically, but the `/handoff:save` and `/handoff:resume` commands come only with the plugin install above.
 
-### On Codex CLI
+### As a Codex plugin
+
+Add the Git-backed marketplace and install the plugin:
+
+```bash
+codex plugin marketplace add Kyaa-A/handoff
+codex plugin add handoff@handoff
+```
+
+Codex plugins include the skill and startup update check. In a fresh session, open `/hooks`, review the command, and trust it. This trust step is mandatory before the hook can run. Codex does not give the updater an interactive yes/no prompt.
+
+### As a plain Codex skill
 
 Codex uses the same skill format, so the `skills/handoff` folder drops straight into your Codex skills directory:
 
@@ -91,6 +111,31 @@ cp -r handoff/skills/handoff ~/.agents/skills/handoff
 Codex auto-invokes it when your prompt matches the `description` (same as Claude Code), or you can call it explicitly by typing `$handoff`. Run `/skills` to confirm it loaded. For a project-scoped install, copy it into `.agents/skills/handoff` in the repo instead. (Codex reads skills from `.agents/skills`; older builds used `~/.codex/skills`, see the [skills docs](https://developers.openai.com/codex/skills).)
 
 Either way, the agent, Claude Code or Codex, discovers the skill automatically via the `description` field in `SKILL.md`. No configuration needed.
+
+## Updates
+
+Managed Claude Code and Codex plugin installs check for a newer release at startup after their hook is enabled. The best-effort HTTPS check runs at most once every 24 hours after a successful check. It only prints installed/latest versions and manual commands; it never downloads, installs, or modifies the plugin. Failures remain silent.
+
+Claude Code:
+
+```bash
+claude plugin marketplace update handoff
+claude plugin update handoff@handoff
+```
+
+Restart Claude Code or run `/reload-plugins` afterward. Claude manages plugin installation and updates, but the startup notice does not provide updater interaction.
+
+Codex:
+
+```bash
+codex plugin marketplace upgrade handoff
+codex plugin remove handoff@handoff
+codex plugin add handoff@handoff
+```
+
+Start a new Codex session afterward and review/trust the command in `/hooks`. The notice is informational; updates remain manual.
+
+Plain skill copies cannot run plugin startup hooks or check automatically. Pull a fresh repository copy and re-copy `skills/handoff`. Set `HANDOFF_UPDATE_CHECK=0` to disable managed-plugin checks.
 
 ## Usage
 

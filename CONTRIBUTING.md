@@ -7,7 +7,8 @@ Thanks for your interest in improving handoff. This is a Claude Agent Skill: a s
 - `skills/handoff/SKILL.md`: the rules Claude loads, plus the `description` that triggers the skill. Keep it tight; this is always in context.
 - `skills/handoff/references/patterns.md`: the template, good-versus-bad examples, storage layout, and chaining. Claude reads this on demand, so detail belongs here, not in `SKILL.md`.
 - `commands/save.md` and `commands/resume.md`: the namespaced `/handoff:save` and `/handoff:resume` commands.
-- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: package the skill as an installable plugin and a one-plugin marketplace. Touch these only when changing packaging metadata (name, version, description).
+- `.claude-plugin/`, `.codex-plugin/`, and `.agents/plugins/`: package the skill for Claude Code and Codex. Keep versions aligned with `package.json`.
+- `hooks/` and `scripts/check-update.mjs`: warn managed-plugin users about releases. Keep the checker dependency-free, warning-only, quiet on failure, and free of secret-bearing diagnostics.
 - `README.md`: the human-facing overview. Keep it in sync when you change the rules.
 
 ## Principles
@@ -32,7 +33,7 @@ This skill has no build step. To try it:
 2. Do a little throwaway work, then ask Claude to "save my progress" and inspect the note it writes to `.handoffs/`.
 3. Start a fresh session and ask it to "pick up where I left off." Confirm the resume is accurate and acts from the note rather than guessing.
 
-To validate the plugin and marketplace manifests, run `claude plugin validate .` from the repo root.
+Use Node 20 or newer. Run `npm test` for updater integration tests and `bash evals/validate-all.sh` for handoff reliability fixtures. Validate Claude packaging with `claude plugin validate .`. Update checks must never change files under the plugin root or execute an update command.
 
 ## Scope
 

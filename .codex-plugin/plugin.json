@@ -1,0 +1,15 @@
+{
+  "name": "handoff",
+  "version": "0.3.3",
+  "description": "Write lean, resumable handoff notes and safely continue work in a fresh session.",
+  "author": {
+    "name": "Asnari Pacalna",
+    "url": "https://github.com/Kyaa-A"
+  },
+  "homepage": "https://github.com/Kyaa-A/handoff",
+  "repository": "https://github.com/Kyaa-A/handoff",
+  "license": "MIT",
+  "keywords": ["handoff", "session", "context", "continuity"],
+  "skills": "./skills/",
+  "hooks": "./hooks/codex-hooks.json"
+}

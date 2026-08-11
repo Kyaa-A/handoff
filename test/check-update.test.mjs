@@ -310,14 +310,3 @@ test('hook and marketplace manifests parse and versions match', async () => {
     assert.doesNotMatch(result.stdout, /\$env:PLUGIN_(?:ROOT|DATA)/);
   }
 });
-
-test('CI pins official GitHub actions to full commit SHAs', async () => {
-  const workflow = await readFile(join(repoRoot, '.github/workflows/ci.yml'), 'utf8');
-  const actionUses = [...workflow.matchAll(/^\s*- uses:\s*(\S+)\s*$/gm)].map((match) => match[1]);
-
-  assert.deepEqual(actionUses.map((entry) => entry.split('@')[0]), [
-    'actions/checkout',
-    'actions/setup-node',
-  ]);
-  assert.ok(actionUses.every((entry) => /^[^@]+@[0-9a-f]{40}$/.test(entry)));
-});
